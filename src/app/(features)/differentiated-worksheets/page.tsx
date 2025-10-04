@@ -23,9 +23,9 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import Image from 'next/image';
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
-import { Download, Share2 } from 'lucide-react';
+import { Download, Share2, Heart } from 'lucide-react';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { Textarea } from '@/components/ui/textarea';
 
 
@@ -46,6 +46,7 @@ export default function DifferentiatedWorksheetsPage() {
   const [selectedClassroom, setSelectedClassroom] = useState('');
   const [worksheets, setWorksheets] = useState<Worksheet[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
+  const [favoriteWorksheets, setFavoriteWorksheets] = useState<Set<string>>(new Set());
   const { toast } = useToast();
   const { user, profile, loading: authLoading, classrooms } = useAuth();
   const router = useRouter();
@@ -139,6 +140,7 @@ export default function DifferentiatedWorksheetsPage() {
         createdAt: serverTimestamp(),
         gradeLevel: selectedWorksheet.gradeLevel,
         worksheetContent: selectedWorksheet.worksheetContent,
+        isFavorite: false,
       };
       const worksheetRef = await addDoc(collection(db, 'worksheets'), worksheetData);
 
@@ -162,6 +164,45 @@ export default function DifferentiatedWorksheetsPage() {
       toast({ variant: 'destructive', title: 'Error', description: 'Could not share the worksheet.' });
     } finally {
       setIsSharing(false);
+    }
+  };
+
+  const handleToggleFavorite = async (worksheetId: string, gradeLevel: string) => {
+    if (!user || !db) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Cannot favorite worksheet. Please share it first."
+      });
+      return;
+    }
+
+    try {
+      const worksheetRef = doc(db, 'worksheets', worksheetId);
+      const isCurrentlyFavorite = favoriteWorksheets.has(worksheetId);
+      await updateDoc(worksheetRef, { isFavorite: !isCurrentlyFavorite });
+      
+      setFavoriteWorksheets(prev => {
+        const newSet = new Set(prev);
+        if (isCurrentlyFavorite) {
+          newSet.delete(worksheetId);
+        } else {
+          newSet.add(worksheetId);
+        }
+        return newSet;
+      });
+      
+      toast({
+        title: isCurrentlyFavorite ? 'Removed from Favorites' : 'Added to Favorites',
+        description: isCurrentlyFavorite ? 'Worksheet removed from your favorites.' : 'Worksheet added to your favorites.',
+      });
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Could not update favorite status. Please try again.',
+      });
     }
   };
 
@@ -254,6 +295,16 @@ export default function DifferentiatedWorksheetsPage() {
                                 >
                                     <Share2 className="mr-2 h-4 w-4" />
                                     Share
+                                </Button>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  onClick={(e) => { e.stopPropagation(); handleToggleFavorite(`worksheet-${index}`, ws.gradeLevel); }}
+                                  aria-label={`Favorite worksheet for Grade ${ws.gradeLevel}`}
+                                  className={favoriteWorksheets.has(`worksheet-${index}`) ? "text-red-500 hover:text-red-700" : "text-gray-500 hover:text-red-500"}
+                                >
+                                    <Heart className={`mr-2 h-4 w-4 ${favoriteWorksheets.has(`worksheet-${index}`) ? 'fill-current' : ''}`} />
+                                    Favorite
                                 </Button>
                             </div>
                           </div>

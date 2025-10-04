@@ -20,12 +20,12 @@ import { LoadingSpinner } from '@/components/loading-spinner';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Download, BookText, Share2, Edit, Sparkles } from 'lucide-react';
+import { Download, BookText, Share2, Edit, Sparkles, Heart } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 
@@ -55,6 +55,8 @@ export default function LessonPlannerPage() {
   const [isSharing, setIsSharing] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const [selectedClassroom, setSelectedClassroom] = useState('');
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [lessonPlanId, setLessonPlanId] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -215,8 +217,10 @@ export default function LessonPlannerPage() {
         topic: form.getValues('topic'),
         gradeLevel: form.getValues('gradeLevel'),
         weeklyPlan: lessonPlan,
+        isFavorite: false,
       };
       const lessonPlanRef = await addDoc(collection(db, 'lessonPlans'), lessonPlanData);
+      setLessonPlanId(lessonPlanRef.id);
 
       const postData = {
         authorId: user.uid,
@@ -249,6 +253,35 @@ export default function LessonPlannerPage() {
       });
     } finally {
       setIsSharing(false);
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    if (!user || !db || !lessonPlanId) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Cannot favorite lesson plan. Please share it first."
+      });
+      return;
+    }
+
+    try {
+      const lessonPlanRef = doc(db, 'lessonPlans', lessonPlanId);
+      await updateDoc(lessonPlanRef, { isFavorite: !isFavorite });
+      setIsFavorite(!isFavorite);
+      
+      toast({
+        title: isFavorite ? 'Removed from Favorites' : 'Added to Favorites',
+        description: isFavorite ? 'Lesson plan removed from your favorites.' : 'Lesson plan added to your favorites.',
+      });
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Could not update favorite status. Please try again.',
+      });
     }
   };
 
@@ -439,6 +472,17 @@ export default function LessonPlannerPage() {
                                                 title="Export to PDF"
                                             >
                                                 {isPdfLoading ? <LoadingSpinner className="h-5 w-5"/> : <Download className="h-5 w-5" />}
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={handleToggleFavorite}
+                                                disabled={!lessonPlanId}
+                                                aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+                                                title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+                                                className={isFavorite ? "text-red-500 hover:text-red-700" : "text-gray-500 hover:text-red-500"}
+                                            >
+                                                <Heart className={`h-5 w-5 ${isFavorite ? 'fill-current' : ''}`} />
                                             </Button>
 
                                             <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>

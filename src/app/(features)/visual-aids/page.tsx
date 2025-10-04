@@ -15,9 +15,11 @@ import { LoadingSpinner } from '@/components/loading-spinner';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import Image from 'next/image';
-import { Download } from 'lucide-react';
+import { Download, Heart } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
+import { db } from '@/lib/firebase';
+import { collection, addDoc, serverTimestamp, doc, updateDoc } from 'firebase/firestore';
 
 const visualAidSchema = z.object({
   description: z.string().min(10, 'Please provide a more detailed description.'),
@@ -26,8 +28,10 @@ const visualAidSchema = z.object({
 export default function VisualAidsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [visualAid, setVisualAid] = useState<string | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [visualAidId, setVisualAidId] = useState<string | null>(null);
   const { toast } = useToast();
-  const { profile, loading: authLoading } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const router = useRouter();
 
 
@@ -47,9 +51,25 @@ export default function VisualAidsPage() {
   async function onSubmit(values: z.infer<typeof visualAidSchema>) {
     setIsLoading(true);
     setVisualAid(null);
+    setIsFavorite(false);
+    setVisualAidId(null);
     try {
       const result = await generateVisualAid(values);
       setVisualAid(result.visualAidDataUri);
+      
+      // Save to Firestore
+      if (user && db) {
+        const visualAidData = {
+          authorId: user.uid,
+          authorName: profile?.name || 'Unknown',
+          createdAt: serverTimestamp(),
+          description: values.description,
+          visualAidDataUri: result.visualAidDataUri,
+          isFavorite: false,
+        };
+        const visualAidRef = await addDoc(collection(db, 'visualAids'), visualAidData);
+        setVisualAidId(visualAidRef.id);
+      }
     } catch (error) {
       console.error('Error generating visual aid:', error);
       toast({
@@ -85,6 +105,35 @@ export default function VisualAidsPage() {
         title: "Success",
         description: "Visual aid has been downloaded."
     });
+  };
+
+  const handleToggleFavorite = async () => {
+    if (!user || !db || !visualAidId) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Cannot favorite visual aid. Please generate it first."
+      });
+      return;
+    }
+
+    try {
+      const visualAidRef = doc(db, 'visualAids', visualAidId);
+      await updateDoc(visualAidRef, { isFavorite: !isFavorite });
+      setIsFavorite(!isFavorite);
+      
+      toast({
+        title: isFavorite ? 'Removed from Favorites' : 'Added to Favorites',
+        description: isFavorite ? 'Visual aid removed from your favorites.' : 'Visual aid added to your favorites.',
+      });
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Could not update favorite status. Please try again.',
+      });
+    }
   };
 
   if (authLoading || !profile || profile.role !== 'teacher') {
@@ -141,14 +190,26 @@ export default function VisualAidsPage() {
               <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle className="font-headline text-xl">Generated Visual Aid</CardTitle>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={handleExport}
-                      aria-label="Export Visual Aid"
-                    >
-                      <Download className="h-5 w-5" />
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleToggleFavorite}
+                        disabled={!visualAidId}
+                        aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+                        className={isFavorite ? "text-red-500 hover:text-red-700" : "text-gray-500 hover:text-red-500"}
+                      >
+                        <Heart className={`h-5 w-5 ${isFavorite ? 'fill-current' : ''}`} />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleExport}
+                        aria-label="Export Visual Aid"
+                      >
+                        <Download className="h-5 w-5" />
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
               <CardContent className="flex justify-center p-6">

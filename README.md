@@ -58,9 +58,11 @@ Ensure that the route is disabled, protected, or removed before deploying public
 [![GitHub Stars](https://img.shields.io/github/stars/skully-coder/shiksha-ai?style=for-the-badge&color=yellow)](https://github.com/skully-coder/shiksha-ai/stargazers)
 [![Hacktoberfest Participation](https://img.shields.io/badge/Hacktoberfest-2025-blueviolet?style=for-the-badge&logo=hacktoberfest)](https://hacktoberfest.com)
 
-## Contributors
+## 💖 Contributors
+
+[![Contributors](https://img.shields.io/github/contributors/skully-coder/shiksha-ai.svg)](https://github.com/skully-coder/shiksha-ai/graphs/contributors)
+[![Total Commits](https://badgen.net/github/commits/skully-coder/shiksha-ai/main)](https://github.com/skully-coder/shiksha-ai/commits/main)
 
 <a href="https://github.com/skully-coder/shiksha-ai/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=skully-coder/shiksha-ai" />
+  <img src="https://contrib.rocks/image?repo=skully-coder/shiksha-ai" alt="Contributors" />
 </a>
-

@@ -1,0 +1,82 @@
+# Code of Conduct
+
+## 🌟 Our Pledge
+We, as members, contributors, and maintainers of **Shiksha-AI**, pledge to make participation in our community a harassment-free experience for everyone, regardless of:
+- Age
+- Body size
+- Visible or invisible disability
+- Ethnicity
+- Sex characteristics
+- Gender identity and expression
+- Level of experience
+- Education
+- Socio-economic status
+- Nationality
+- Personal appearance
+- Race
+- Religion, or sexual identity and orientation
+
+We commit to creating an inclusive, friendly, and respectful environment for learning, contributing, and building together.
+
+---
+
+## 🤝 Our Standards
+
+Examples of behavior that contribute to a positive environment include:
+- Being respectful and empathetic toward others
+- Using welcoming and inclusive language
+- Providing constructive feedback
+- Accepting responsibility and apologizing for mistakes
+- Focusing on what is best for the community
+
+Examples of **unacceptable behavior** include:
+- Harassment, discrimination, or intimidation of any kind
+- Trolling, insulting/derogatory comments, or personal attacks
+- Public or private harassment
+- Publishing others’ private information without consent
+- Any other conduct that could reasonably be considered inappropriate
+
+---
+
+## 🧑‍💻 Our Responsibilities
+
+Project maintainers are responsible for clarifying the standards of acceptable behavior and are expected to take appropriate corrective action in response to any unacceptable behavior.
+
+Maintainers have the right and responsibility to remove, edit, or reject:
+- Comments, commits, code, wiki edits, issues, and other contributions that violate this Code of Conduct.
+
+---
+
+## 🧭 Scope
+
+This Code of Conduct applies within all community spaces, including:
+- GitHub repositories
+- Discussions and issue comments
+- Pull requests
+- Community chat channels and social media in direct connection with the project
+
+---
+
+## 🚨 Enforcement
+
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at:
+
+📩 **[ abhinav.hfs@gmail.com]**
+
+All complaints will be reviewed and investigated promptly and fairly.
+
+Project maintainers are obligated to maintain confidentiality regarding the reporter of an incident.
+
+---
+
+## 📘 Attribution
+
+This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org), version 2.1.
+
+For more information about this Code of Conduct, visit:  
+[https://www.contributor-covenant.org/version/2/1/code_of_conduct.html](https://www.contributor-covenant.org/version/2/1/code_of_conduct.html)
+
+---
+
+### ❤️ Thank You
+Thank you for helping us make **Shiksha-AI** a positive and inclusive space for everyone to learn, share, and grow together.

@@ -1,4 +1,3 @@
-
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -37,8 +36,10 @@ export function NavItems() {
       }
       router.push('/login');
       toast({
+          variant: 'success',
           title: "Logged Out",
-          description: "You have been successfully logged out."
+          description: "You have been successfully logged out.",
+          style: { backgroundColor: "#fff", color: "#222" } // Set background to white, text to dark
       });
     } catch (error) {
       console.error("Error signing out: ", error);
@@ -46,6 +47,7 @@ export function NavItems() {
         variant: 'destructive',
         title: 'Logout Failed',
         description: 'An unexpected error occurred during logout.',
+        style: { backgroundColor: "#fff", color: "#222" } // Set background to white, text to dark
       });
     }
   };

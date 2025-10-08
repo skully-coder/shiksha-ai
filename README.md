@@ -61,16 +61,6 @@ Ensure that the route is disabled, protected, or removed before deploying public
 [![Hacktoberfest Participation](https://img.shields.io/badge/Hacktoberfest-2025-blueviolet?style=for-the-badge&logo=hacktoberfest)](https://hacktoberfest.com)
 
 ---
-## 📊 Repository Growth
-
-Below are live visuals showing how the repository’s *stars* ⭐ and *forks* 🍴 have evolved over time:
-
-<p align="center">
-  <img src="https://starchart.cc/skully-coder/shiksha-ai.svg" alt="Stars Over Time" width="48%">
-  &nbsp;&nbsp;
-
-  </a>
-</p>
 
 
 ## 👥 Contributors

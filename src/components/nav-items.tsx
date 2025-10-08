@@ -47,6 +47,7 @@ export function NavItems() {
         variant: 'destructive',
         title: 'Logout Failed',
         description: 'An unexpected error occurred during logout.',
+        style: { backgroundColor: "#fff", color: "#222" } // Set background to white, text to dark
       });
     }
   };

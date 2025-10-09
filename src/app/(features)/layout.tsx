@@ -20,7 +20,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <SidebarProvider>
         <div className="flex">
           <Sidebar>
-            <SidebarHeader>
+            <SidebarHeader className="flex items-center justify-center">
               <Link href="/lesson-planner" className="block">
                 <Image 
                   src="/assets/Logo_2.png"

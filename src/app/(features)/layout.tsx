@@ -23,7 +23,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <SidebarHeader>
               <Link href="/lesson-planner" className="block">
                 <Image 
-                  src="assets/Logo_2.png"
+                  src="/assets/Logo_2.png"
                   alt="Shiksha AI Logo"
                   width={160}
                   height={40}

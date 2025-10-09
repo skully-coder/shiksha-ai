@@ -25,9 +25,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <Image 
                   src="/assets/Logo_2.png"
                   alt="Shiksha AI Logo"
-                  width={140}
-                  height={35}
-                  className="w-36 h-auto"
+                  width={120}
+                  height={30}
+                  className="w-32 h-auto"
                   priority
                 />
               </Link>

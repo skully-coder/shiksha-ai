@@ -45,6 +45,8 @@ Project maintainers are responsible for clarifying the standards of acceptable b
 Maintainers have the right and responsibility to remove, edit, or reject:
 - Comments, commits, code, wiki edits, issues, and other contributions that violate this Code of Conduct.
 
+Please note that an issue would be considered stale if there is no activity on it for seven days. This is done to encourage other developers who have ideas for the same issue who did not have a chance to contribute originally. The same also goes for PRs with more than three days of inactivity.
+
 ---
 
 ## 🧭 Scope

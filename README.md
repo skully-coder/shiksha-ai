@@ -46,6 +46,9 @@ Features Supported :
 Do not enable or expose the Admin Console in production environments.
 Ensure that the route is disabled, protected, or removed before deploying publicly.
 
+## Contribution Guidelines:
+If you wish to contribute to this project, please refer the [Contribution Guidelines](/CONTRIBUTING.md)
+
 ## Stats
 
 [![Total Commits](https://img.shields.io/badge/Commits-143%2B-blue?style=for-the-badge)](https://github.com/skully-coder/shiksha-ai/commits)

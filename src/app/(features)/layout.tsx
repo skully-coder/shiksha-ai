@@ -1,6 +1,8 @@
+
 'use client';
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   SidebarProvider,
   Sidebar,
@@ -16,13 +18,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthGuard>
       <SidebarProvider>
-        <div className="flex min-h-screen">
+        <div className="flex">
           <Sidebar>
             <SidebarHeader>
               <Link href="/lesson-planner" className="block">
-                <h1 className="font-headline text-3xl font-bold text-primary px-2 py-1">
-                  Shiksha AI
-                </h1>
+                <Image 
+                  src="assets/Logo_2.png"
+                  alt="Shiksha AI Logo"
+                  width={160}
+                  height={40}
+                  className="w-40 h-auto"
+                  priority
+                />
               </Link>
             </SidebarHeader>
             <SidebarContent>
@@ -30,7 +37,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </SidebarContent>
           </Sidebar>
           <SidebarInset>
-            <div className="relative flex-1 h-full">
+            <div className="relative flex-1">
               {children}
             </div>
           </SidebarInset>

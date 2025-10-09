@@ -27,6 +27,7 @@ import { useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import FeaturePageSkeleton from "@/components/skeletons/FeaturePageSkeleton";
 
 
 const lessonPlannerSchema = z.object({
@@ -253,11 +254,7 @@ export default function LessonPlannerPage() {
   };
 
   if (authLoading || !profile || profile.role !== 'teacher') {
-    return (
-        <div className="flex items-center justify-center h-full">
-            <LoadingSpinner className="h-12 w-12" />
-        </div>
-    );
+    return <FeaturePageSkeleton cardCount={6} />;
   }
 
   return (

@@ -18,6 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/loading-spinner';
 import { useAuth } from '@/hooks/use-auth';
 import { Separator } from '@/components/ui/separator';
+import LoginSkeleton from "@/components/skeletons/LoginSkeleton";
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address.'),
@@ -59,6 +60,7 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   }
+
 
   const handlePasswordReset = async () => {
     const email = form.getValues('email');

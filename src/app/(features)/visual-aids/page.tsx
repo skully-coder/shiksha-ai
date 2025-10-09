@@ -18,6 +18,8 @@ import Image from 'next/image';
 import { Download } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
+import FeaturePageSkeleton from "@/components/skeletons/FeaturePageSkeleton";
+
 
 const visualAidSchema = z.object({
   description: z.string().min(10, 'Please provide a more detailed description.'),
@@ -88,12 +90,9 @@ export default function VisualAidsPage() {
   };
 
   if (authLoading || !profile || profile.role !== 'teacher') {
-    return (
-        <div className="flex items-center justify-center h-full">
-            <LoadingSpinner className="h-12 w-12" />
-        </div>
-    );
+    return <FeaturePageSkeleton cardCount={6} />; 
   }
+        
 
   return (
     <div className="flex flex-col h-full">

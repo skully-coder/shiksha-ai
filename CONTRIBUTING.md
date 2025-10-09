@@ -65,6 +65,7 @@ Thank you for your interest in contributing to Shiksha AI! We welcome contributo
    - Make sure to set `NEXT_PUBLIC_DEV_MODE` to `true` for the development.
    - Start the development server and make sure everything works as expected.
 
-### Conclusion
+### Rules
+Open-source contribution is a great way to encourage building and pooling talents from across the world. To make open-source contribution a safe and innovative space, kindly adhere to the [Code of Conduct](/CODE_OF_CONDUCT.md)
 
 Thank you for your contributions! We appreciate your efforts to help improve Shiksha AI.

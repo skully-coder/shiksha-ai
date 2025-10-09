@@ -53,7 +53,7 @@ Ensure that the route is disabled, protected, or removed before deploying public
 [![PRs Merged](https://img.shields.io/github/issues-pr-closed/skully-coder/shiksha-ai?style=for-the-badge&color=success)](https://github.com/skully-coder/shiksha-ai/pulls?q=is%3Apr+is%3Amerged)
 [![Issues Resolved](https://img.shields.io/badge/Issues%20Resolved-2-orange?style=for-the-badge)](https://github.com/skully-coder/shiksha-ai/issues?q=is%3Aissue+is%3Aclosed)
 
-![GitHub forks](https://img.shields.io/github/forks/skully-coder/shiksha-ai?style=social)
+[![GitHub Forks](https://img.shields.io/github/forks/skully-coder/shiksha-ai?style=for-the-badge&color=brightgreen)](https://github.com/skully-coder/shiksha-ai/network/members)
 
 [![GitHub Stars](https://img.shields.io/github/stars/skully-coder/shiksha-ai?style=for-the-badge&color=yellow)](https://github.com/skully-coder/shiksha-ai/stargazers)
 [![Hacktoberfest Participation](https://img.shields.io/badge/Hacktoberfest-2025-blueviolet?style=for-the-badge&logo=hacktoberfest)](https://hacktoberfest.com)
@@ -63,4 +63,3 @@ Ensure that the route is disabled, protected, or removed before deploying public
 <a href="https://github.com/skully-coder/shiksha-ai/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=skully-coder/shiksha-ai" />
 </a>
-

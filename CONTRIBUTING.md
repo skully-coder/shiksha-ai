@@ -53,6 +53,7 @@ Thank you for your interest in contributing to Shiksha AI! We welcome contributo
 
 1. **Set Up Firebase**
    - If you haven’t already, create a Firebase account and set up a new project in the Firebase console.
+   - To make it easier to test the features, an Admin Console has been added to create teacher and student users in bulk, without needed to go through the Auth flow. 
 
 2. **Import the Project**
    - In Firebase Studio, select the option to import an existing project.
@@ -60,6 +61,8 @@ Thank you for your interest in contributing to Shiksha AI! We welcome contributo
 
 3. **Run the Project**
    - Ensure that you have all necessary dependencies installed.
+   - Create a .env file using the .env.template file as template for the environment variables.
+   - Make sure to set `NEXT_PUBLIC_DEV_MODE` to `true` for the development.
    - Start the development server and make sure everything works as expected.
 
 ### Conclusion

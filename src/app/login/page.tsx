@@ -1,7 +1,9 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -96,7 +98,15 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <CardTitle className="font-headline text-3xl">Shiksha AI</CardTitle>
+           <Image 
+              src="/assets/Logo_2.png"
+              alt="Shiksha AI Logo"
+              width={180}
+              height={45}
+              className="mx-auto mb-4"
+              priority
+            />
+          <CardTitle className="font-headline text-2xl">Sign In</CardTitle>
           <CardDescription>Welcome back! Please sign in.</CardDescription>
         </CardHeader>
         <CardContent>

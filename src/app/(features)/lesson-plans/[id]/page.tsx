@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/loading-spinner';
 
+
 interface LessonPlan {
     id: string;
     topic: string;

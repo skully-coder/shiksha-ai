@@ -12,6 +12,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { PlusCircle, CheckCircle, ArrowRight } from 'lucide-react';
+import FeaturePageSkeleton from "@/components/skeletons/FeaturePageSkeleton";
 
 interface Classroom {
   id: string;
@@ -104,12 +105,8 @@ export default function ClassroomsPage() {
   };
 
   if (authLoading || loading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <LoadingSpinner className="h-12 w-12" />
-      </div>
-    );
-  }
+    return <FeaturePageSkeleton cardCount={6} />;
+}
 
   if (profile?.role === 'student') {
     const studentClassroom = classrooms.find(c => c.id === profile.classroomId);

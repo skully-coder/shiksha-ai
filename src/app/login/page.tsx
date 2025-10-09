@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/loading-spinner';
 import { useAuth } from '@/hooks/use-auth';
 import { Separator } from '@/components/ui/separator';
+import LoginSkeleton from "@/components/skeletons/LoginSkeleton";
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address.'),
@@ -59,13 +60,18 @@ export default function LoginPage() {
     }
   }
 
-  if (loading || user) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-background">
-        <LoadingSpinner className="h-12 w-12" />
-      </div>
-    );
+  const loginTemplate = [
+    { type: "title" },
+    { type: "text", width: "w-64" },
+    { type: "input" },            
+    { type: "input" },            
+    { type: "button" },           
+  ];
+  
+  if (loading || user || isLoading) {
+    return <LoginSkeleton />;
   }
+      
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">

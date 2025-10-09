@@ -15,6 +15,8 @@ import { generateLocalContent } from '@/ai/flows/generate-local-content';
 import { LoadingSpinner } from '@/components/loading-spinner';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useAuth } from '@/hooks/use-auth';
+import FeaturePageSkeleton from "@/components/skeletons/FeaturePageSkeleton";
+
 
 const localContentSchema = z.object({
   prompt: z.string().min(10, 'Prompt must be at least 10 characters.'),
@@ -54,12 +56,9 @@ export default function LocalContentPage() {
   }
 
   if (authLoading || !profile) {
-    return (
-        <div className="flex items-center justify-center h-full">
-            <LoadingSpinner className="h-12 w-12" />
-        </div>
-    );
+    return <FeaturePageSkeleton cardCount={6} />;
   }
+        
 
   return (
     <div className="flex flex-col h-full">

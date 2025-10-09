@@ -19,6 +19,9 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Terminal, Edit, BookText, ArrowRight } from 'lucide-react';
+import PageSkeleton from '@/components/skeletons/PageSkeleton';
+import ProfileSkeleton from '@/components/skeletons/ProfileSkeleton';
+
 
 const profileUpdateSchema = z.object({
     class: z.string().optional(),
@@ -124,17 +127,7 @@ export default function ProfilePage() {
 
 
     if (authLoading) {
-        return (
-            <div className="flex flex-col h-full">
-                <header className="flex items-center justify-between p-4 border-b md:hidden">
-                    <h1 className="font-headline text-xl font-bold text-primary">Profile</h1>
-                    <SidebarTrigger />
-                </header>
-                <div className="flex flex-1 items-center justify-center">
-                    <LoadingSpinner className="h-12 w-12" />
-                </div>
-            </div>
-        );
+        return <ProfileSkeleton />;       
     }
     
     return (

@@ -27,6 +27,7 @@ import { Download, Share2 } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { Textarea } from '@/components/ui/textarea';
+import PageSkeleton from '@/components/skeletons/PageSkeleton';
 
 
 const worksheetsSchema = z.object({
@@ -166,7 +167,7 @@ export default function DifferentiatedWorksheetsPage() {
   };
 
   if (authLoading || !profile || profile.role !== 'teacher') {
-    return <div className="flex items-center justify-center h-full"><LoadingSpinner className="h-12 w-12" /></div>;
+    return <PageSkeleton />;
   }
 
   return (

@@ -178,38 +178,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Impact Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-green-50">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 px-2">
-              Transforming Education
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
-              See how Shiksha AI is making a difference in classrooms around the world.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-            <div className="text-center px-2">
-              <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-2">80%</div>
-              <div className="text-gray-600 text-sm sm:text-base">Time Saved on Planning</div>
-            </div>
-            <div className="text-center px-2">
-              <div className="text-2xl sm:text-3xl font-bold text-emerald-600 mb-2">95%</div>
-              <div className="text-gray-600 text-sm sm:text-base">Teacher Satisfaction</div>
-            </div>
-            <div className="text-center px-2">
-              <div className="text-2xl sm:text-3xl font-bold text-teal-600 mb-2">60%</div>
-              <div className="text-gray-600 text-sm sm:text-base">Improved Student Engagement</div>
-            </div>
-            <div className="text-center px-2">
-              <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-2">100+</div>
-              <div className="text-gray-600 text-sm sm:text-base">Schools Supported</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-12 sm:py-16 md:py-20 bg-white">
         <div className="max-w-4xl mx-auto text-center px-3 sm:px-4 md:px-6 lg:px-8">

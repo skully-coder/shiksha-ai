@@ -1,0 +1,45 @@
+name: Refresh Contributors Image
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-contributors:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && github.base_ref == 'main'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check if PR author is a new contributor
+        id: check
+        run: |
+          AUTHOR=${{ github.event.pull_request.user.login }}
+          REPO=${{ github.repository }}
+          CONTRIBUTORS=$(gh api repos/$REPO/contributors --paginate | jq -r '.[].login' | grep -x "$AUTHOR" || true)
+
+          if [ -z "$CONTRIBUTORS" ]; then
+            echo "is_new=true" >> $GITHUB_OUTPUT
+            echo "✅ New contributor detected: $AUTHOR"
+          else
+            echo "is_new=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ $AUTHOR already listed as contributor"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Force refresh contrib.rocks image (for new contributor)
+        if: steps.check.outputs.is_new == 'true'
+        run: |
+          # Add a small whitespace change to force GitHub to re-render the cached image
+          echo "" >> README.md
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "chore: refresh contributors image [skip ci]" || echo "No changes to commit"
+          git push
+

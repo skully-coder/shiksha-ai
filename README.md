@@ -54,7 +54,7 @@ If you wish to contribute to this project, please refer the [Contribution Guidel
 [![Total Commits](https://img.shields.io/badge/Commits-143%2B-blue?style=for-the-badge)](https://github.com/skully-coder/shiksha-ai/commits)
 [![Contributors](https://img.shields.io/badge/Contributors-1-blueviolet?style=for-the-badge)](https://github.com/skully-coder/shiksha-ai/graphs/contributors)
 [![PRs Merged](https://img.shields.io/github/issues-pr-closed/skully-coder/shiksha-ai?style=for-the-badge&color=success)](https://github.com/skully-coder/shiksha-ai/pulls?q=is%3Apr+is%3Amerged)
-[![Issues Resolved](https://img.shields.io/badge/Issues%20Resolved-2-orange?style=for-the-badge)](https://github.com/skully-coder/shiksha-ai/issues?q=is%3Aissue+is%3Aclosed)
+[![Issues Resolved](https://img.shields.io/badge/Issues%20Resolved-2-orange?style=for-the-badge)](https://github.com/skully-coder/shiksha-ai/issues?q=is%3Aissue%20state%3Aclosed)
 
 [![GitHub Forks](https://img.shields.io/github/forks/skully-coder/shiksha-ai?style=for-the-badge&color=brightgreen)](https://github.com/skully-coder/shiksha-ai/network/members)
 

@@ -1,3 +1,5 @@
+![GitHub deployments](https://img.shields.io/github/deployments/skully-coder/shiksha-ai/production?style=for-the-badge&label=deployment)
+
 # Shiksha AI: AI-Powered Teaching Assistant
 
 ## What is the idea about?
@@ -51,13 +53,13 @@ If you wish to contribute to this project, please refer the [Contribution Guidel
 
 ## Stats
 
-[![Total Commits](https://img.shields.io/badge/Commits-143%2B-blue?style=for-the-badge)](https://github.com/skully-coder/shiksha-ai/commits)
-[![Contributors](https://img.shields.io/badge/Contributors-1-blueviolet?style=for-the-badge)](https://github.com/skully-coder/shiksha-ai/graphs/contributors)
-[![PRs Merged](https://img.shields.io/github/issues-pr-closed/skully-coder/shiksha-ai?style=for-the-badge&color=success)](https://github.com/skully-coder/shiksha-ai/pulls?q=is%3Apr+is%3Amerged)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/skully-coder/shiksha-ai?style=for-the-badge)
+![GitHub contributors](https://img.shields.io/github/contributors/skully-coder/shiksha-ai?style=for-the-badge&cacheSeconds=3600)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr/skully-coder/shiksha-ai?style=for-the-badge&color=purple)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr-closed/skully-coder/shiksha-ai?style=for-the-badge&color=green)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/skully-coder/shiksha-ai?style=for-the-badge)
 [![Issues Resolved](https://img.shields.io/badge/Issues%20Resolved-2-orange?style=for-the-badge)](https://github.com/skully-coder/shiksha-ai/issues?q=is%3Aissue%20state%3Aclosed)
-
 [![GitHub Forks](https://img.shields.io/github/forks/skully-coder/shiksha-ai?style=for-the-badge&color=brightgreen)](https://github.com/skully-coder/shiksha-ai/network/members)
-
 [![GitHub Stars](https://img.shields.io/github/stars/skully-coder/shiksha-ai?style=for-the-badge&color=yellow)](https://github.com/skully-coder/shiksha-ai/stargazers)
 [![Hacktoberfest Participation](https://img.shields.io/badge/Hacktoberfest-2025-blueviolet?style=for-the-badge&logo=hacktoberfest)](https://hacktoberfest.com)
 

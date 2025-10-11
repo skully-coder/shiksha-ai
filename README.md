@@ -64,7 +64,5 @@ If you wish to contribute to this project, please refer the [Contribution Guidel
 [![Hacktoberfest Participation](https://img.shields.io/badge/Hacktoberfest-2025-blueviolet?style=for-the-badge&logo=hacktoberfest)](https://hacktoberfest.com)
 
 ## Contributors
-
-<a href="https://github.com/skully-coder/shiksha-ai/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=skully-coder/shiksha-ai" />
-</a>
+<!-- readme: contributors -start -->
+<!-- readme: contributors -end -->

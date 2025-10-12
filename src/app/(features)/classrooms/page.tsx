@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { db } from '@/lib/firebase';
-import { collection, doc, getDocs, updateDoc, arrayUnion, arrayRemove, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, arrayRemove, getDoc } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/loading-spinner';
@@ -32,48 +32,62 @@ export default function ClassroomsPage() {
     if (authLoading || !db) {
       return;
     }
-    
+
     let isMounted = true;
     setLoading(true);
 
     const fetchClassrooms = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'classrooms'));
-        if (isMounted) {
-          const classroomsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Classroom));
-          setClassrooms(classroomsData);
-        }
-
+        // Teacher: load only classrooms referenced on their profile
         if (profile?.role === 'teacher' && user) {
-          const teacherDoc = await getDoc(doc(db, 'teachers', user.uid));
-          if (teacherDoc.exists() && isMounted) {
-            setJoinedClassrooms(teacherDoc.data().classroomIds || []);
+          const teacherSnap = await getDoc(doc(db, 'teachers', user.uid));
+          if (teacherSnap.exists()) {
+            const teacherData = teacherSnap.data() as { classroomIds?: string[] };
+            const ids = teacherData.classroomIds || [];
+            if (isMounted) setJoinedClassrooms(ids);
+            if (ids.length > 0) {
+              const docs = await Promise.all(ids.map(id => getDoc(doc(db, 'classrooms', id))));
+              const rooms = docs.filter(d => d.exists()).map(d => ({ id: d.id, ...d.data() } as Classroom));
+              if (isMounted) setClassrooms(rooms);
+            } else if (isMounted) {
+              setClassrooms([]);
+            }
+          } else if (isMounted) {
+            setJoinedClassrooms([]);
+            setClassrooms([]);
           }
+          // Student: load their single classroom if present
+        } else if (profile?.role === 'student') {
+          if ((profile as any).classroomId) {
+            const c = await getDoc(doc(db, 'classrooms', (profile as any).classroomId));
+            if (isMounted) setClassrooms(c.exists() ? [{ id: c.id, ...c.data() } as Classroom] : []);
+          } else if (isMounted) {
+            setClassrooms([]);
+          }
+        } else if (isMounted) {
+          // Unknown role or not signed in
+          setClassrooms([]);
         }
       } catch (error: any) {
-        console.error("Error fetching classrooms:", error);
+        console.error('Error fetching classrooms:', error);
         let description = 'Could not load classrooms.';
         if (error.code === 'permission-denied') {
           description = "You don't have permission to view classrooms. Please check your Firestore security rules.";
         } else if (error.code === 'failed-precondition') {
           description = `A Firestore index is required for this query. Please create it in your Firebase console. The error was: "${error.message}"`;
         }
-        if(isMounted) {
-            toast({ variant: 'destructive', title: 'Error Loading Classrooms', description, duration: 9000 });
+        if (isMounted) {
+          toast({ variant: 'destructive', title: 'Error Loading Classrooms', description, duration: 9000 });
         }
       } finally {
-        if(isMounted) {
-            setLoading(false);
-        }
+        if (isMounted) setLoading(false);
       }
     };
-    
+
     fetchClassrooms();
 
-    return () => {
-        isMounted = false;
-    }
-  }, [authLoading, profile, user, toast]);
+    return () => { isMounted = false; };
+  }, [authLoading, profile, user, toast, db]);
 
   const handleJoinLeave = async (classroomId: string, isJoined: boolean) => {
     if (!user || !db || profile?.role !== 'teacher') return;

@@ -105,25 +105,122 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
 <table>
 	<tbody>
 		<tr>
-            <td align="center"><a href="https://github.com/skully-coder"><img src="https://avatars.githubusercontent.com/u/55917548?v=4" width="100;" alt="skully-coder"/><br /><sub><b>Abhinav Agrawal</b></sub></a></td>
-            <td align="center"><a href="https://github.com/madhurchouhan7"><img src="https://avatars.githubusercontent.com/u/30585596?v=4" width="100;" alt="madhurchouhan7"/><br /><sub><b>Madhur</b></sub></a></td>
-            <td align="center"><a href="https://github.com/PTejass"><img src="https://avatars.githubusercontent.com/u/144028081?v=4" width="100;" alt="PTejass"/><br /><sub><b>P B TEJAS</b></sub></a></td>
-            <td align="center"><a href="https://github.com/prajeeta15"><img src="https://avatars.githubusercontent.com/u/96904203?v=4" width="100;" alt="prajeeta15"/><br /><sub><b>Prajeeta</b></sub></a></td>
-            <td align="center"><a href="https://github.com/Dhanwantisatone"><img src="https://avatars.githubusercontent.com/u/191073548?v=4" width="100;" alt="Dhanwantisatone"/><br /><sub><b>Dhanwantisatone</b></sub></a></td>
-            <td align="center"><a href="https://github.com/Sidratul02"><img src="https://avatars.githubusercontent.com/u/142794200?v=4" width="100;" alt="Sidratul02"/><br /><sub><b>Sidratul Muntaha</b></sub></a></td>
+            <td align="center">
+                <a href="https://github.com/skully-coder">
+                    <img src="https://avatars.githubusercontent.com/u/55917548?v=4" width="100;" alt="skully-coder"/>
+                    <br />
+                    <sub><b>Abhinav Agrawal</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/madhurchouhan7">
+                    <img src="https://avatars.githubusercontent.com/u/30585596?v=4" width="100;" alt="madhurchouhan7"/>
+                    <br />
+                    <sub><b>Madhur</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/PTejass">
+                    <img src="https://avatars.githubusercontent.com/u/144028081?v=4" width="100;" alt="PTejass"/>
+                    <br />
+                    <sub><b>P B TEJAS</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/prajeeta15">
+                    <img src="https://avatars.githubusercontent.com/u/96904203?v=4" width="100;" alt="prajeeta15"/>
+                    <br />
+                    <sub><b>Prajeeta</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Dhanwantisatone">
+                    <img src="https://avatars.githubusercontent.com/u/191073548?v=4" width="100;" alt="Dhanwantisatone"/>
+                    <br />
+                    <sub><b>Dhanwantisatone</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Sidratul02">
+                    <img src="https://avatars.githubusercontent.com/u/142794200?v=4" width="100;" alt="Sidratul02"/>
+                    <br />
+                    <sub><b>Sidratul Muntaha</b></sub>
+                </a>
+            </td>
 		</tr>
 		<tr>
-            <td align="center"><a href="https://github.com/Z33xD"><img src="https://avatars.githubusercontent.com/u/79450902?v=4" width="100;" alt="Z33xD"/><br /><sub><b>Zeeshan</b></sub></a></td>
-            <td align="center"><a href="https://github.com/its-Pratik-15"><img src="https://avatars.githubusercontent.com/u/182534401?v=4" width="100;" alt="its-Pratik-15"/><br /><sub><b>Pratik Kumar Pan</b></sub></a></td>
-            <td align="center"><a href="https://github.com/poorna825"><img src="https://avatars.githubusercontent.com/u/214160404?v=4" width="100;" alt="poorna825"/><br /><sub><b>Poornima Taley</b></sub></a></td>
-            <td align="center"><a href="https://github.com/Aditya-Bajpayee007"><img src="https://avatars.githubusercontent.com/u/145580411?v=4" width="100;" alt="Aditya-Bajpayee007"/><br /><sub><b>Aditya Bajpayee</b></sub></a></td>
-            <td align="center"><a href="https://github.com/notAryan10"><img src="https://avatars.githubusercontent.com/u/184558940?v=4" width="100;" alt="notAryan10"/><br /><sub><b>Aryan Verma</b></sub></a></td>
-            <td alipgn="center"><a href="https://github.com/ImgBotApp"><img src="https://avatars.githubusercontent.com/u/31427850?v=4" width="100;" alt="ImgBotApp"/><br /><sub><b>Imgbot</b></sub></a></td>
+            <td align="center">
+                <a href="https://github.com/Z33xD">
+                    <img src="https://avatars.githubusercontent.com/u/79450902?v=4" width="100;" alt="Z33xD"/>
+                    <br />
+                    <sub><b>Zeeshan</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/its-Pratik-15">
+                    <img src="https://avatars.githubusercontent.com/u/182534401?v=4" width="100;" alt="its-Pratik-15"/>
+                    <br />
+                    <sub><b>Pratik Kumar Pan</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/poorna825">
+                    <img src="https://avatars.githubusercontent.com/u/214160404?v=4" width="100;" alt="poorna825"/>
+                    <br />
+                    <sub><b>Poornima Taley</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/abbasabro">
+                    <img src="https://avatars.githubusercontent.com/u/141827555?v=4" width="100;" alt="abbasabro"/>
+                    <br />
+                    <sub><b>Abbas Abro</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Aditya-Bajpayee007">
+                    <img src="https://avatars.githubusercontent.com/u/145580411?v=4" width="100;" alt="Aditya-Bajpayee007"/>
+                    <br />
+                    <sub><b>Aditya Bajpayee</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/notAryan10">
+                    <img src="https://avatars.githubusercontent.com/u/184558940?v=4" width="100;" alt="notAryan10"/>
+                    <br />
+                    <sub><b>Aryan Verma</b></sub>
+                </a>
+            </td>
 		</tr>
 		<tr>
-            <td align="center"><a href="https://github.com/pipaliyajaydip"><img src="https://avatars.githubusercontent.com/u/67597366?v=4" width="100;" alt="pipaliyajaydip"/><br /><sub><b>Jaydip Pipaliya</b></sub></a></td>
-            <td align="center"><a href="https://github.com/MarioDevTM"><img src="https://avatars.githubusercontent.com/u/84230374?v=4" width="100;" alt="MarioDevTM"/><br /><sub><b>Mario Turtoi</b></sub></a></td>
-            <td align="center"><a href="https://github.com/pragya1204"><img src="https://avatars.githubusercontent.com/u/135381931?v=4" width="100;" alt="pragya1204"/><br /><sub><b>Pragya</b></sub></a></td>
+            <td align="center">
+                <a href="https://github.com/ImgBotApp">
+                    <img src="https://avatars.githubusercontent.com/u/31427850?v=4" width="100;" alt="ImgBotApp"/>
+                    <br />
+                    <sub><b>Imgbot</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/pipaliyajaydip">
+                    <img src="https://avatars.githubusercontent.com/u/67597366?v=4" width="100;" alt="pipaliyajaydip"/>
+                    <br />
+                    <sub><b>Jaydip Pipaliya</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/MarioDevTM">
+                    <img src="https://avatars.githubusercontent.com/u/84230374?v=4" width="100;" alt="MarioDevTM"/>
+                    <br />
+                    <sub><b>Mario Turtoi</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/pragya1204">
+                    <img src="https://avatars.githubusercontent.com/u/135381931?v=4" width="100;" alt="pragya1204"/>
+                    <br />
+                    <sub><b>Pragya</b></sub>
+                </a>
+            </td>
 		</tr>
 	<tbody>
 </table>

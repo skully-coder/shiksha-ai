@@ -157,6 +157,13 @@ If you wish to contribute to this project, please refer the [Contribution Guidel
 		</tr>
 		<tr>
             <td align="center">
+                <a href="https://github.com/pipaliyajaydip">
+                    <img src="https://avatars.githubusercontent.com/u/67597366?v=4" width="100;" alt="pipaliyajaydip"/>
+                    <br />
+                    <sub><b>Jaydip Pipaliya</b></sub>
+                </a>
+            </td>
+            <td align="center">
                 <a href="https://github.com/MarioDevTM">
                     <img src="https://avatars.githubusercontent.com/u/84230374?v=4" width="100;" alt="MarioDevTM"/>
                     <br />

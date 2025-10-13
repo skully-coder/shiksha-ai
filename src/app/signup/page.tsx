@@ -27,27 +27,18 @@ const signupSchema = z.object({
     section: z.string().optional(),
     rollNumber: z.string().optional(),
   }).superRefine((data, ctx) => {
-    if (data.role === 'student') {
+    const needsClassSection = data.role === 'student' || data.role === 'teacher';
+    if (needsClassSection) {
       if (!data.class) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Class is required.',
-          path: ['class'],
-        });
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Class is required.', path: ['class'] });
       }
       if (!data.section) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Section is required.',
-          path: ['section'],
-        });
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Section is required.', path: ['section'] });
       }
+    }
+    if (data.role === 'student') {
       if (!data.rollNumber) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Roll number is required.',
-          path: ['rollNumber'],
-        });
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Roll number is required.', path: ['rollNumber'] });
       }
     }
   });
@@ -106,10 +97,26 @@ export default function SignupPage() {
               section: section,
               studentIds: arrayUnion(user.uid)
           }, { merge: true });
+      } else if (values.role === 'teacher') {
+          const grade = values.class!;
+          const section = values.section!.toUpperCase();
+          const classroomId = `${grade}-${section}`.toUpperCase();
+          // Persist teacher's classroom membership
+          userData.class = grade;
+          userData.section = section;
+          userData.classroomIds = arrayUnion(classroomId);
+
+          // Upsert classroom and add teacher
+          const classroomRef = doc(db, 'classrooms', classroomId);
+          await setDoc(classroomRef, {
+              grade: grade,
+              section: section,
+              teacherIds: arrayUnion(user.uid)
+          }, { merge: true });
       }
 
       // Save user data to Firestore
-      await setDoc(doc(db, collectionName, user.uid), userData);
+      await setDoc(doc(db, collectionName, user.uid), userData, { merge: true });
 
       toast({
         title: 'Account Created',
@@ -186,7 +193,7 @@ export default function SignupPage() {
                 )}
               />
               
-              {selectedRole === 'student' && (
+              {(selectedRole === 'student' || selectedRole === 'teacher') && (
                 <>
                   <div className="grid grid-cols-3 gap-4">
                     <FormField
@@ -215,19 +222,21 @@ export default function SignupPage() {
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={form.control}
-                      name="rollNumber"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Roll No.</FormLabel>
-                          <FormControl>
-                            <Input placeholder="e.g., 25" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    {selectedRole === 'student' && (
+                      <FormField
+                        control={form.control}
+                        name="rollNumber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Roll No.</FormLabel>
+                            <FormControl>
+                              <Input placeholder="e.g., 25" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
                   </div>
                 </>
               )}

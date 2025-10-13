@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { db } from '@/lib/firebase';
-import { doc, updateDoc, arrayUnion, arrayRemove, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, arrayRemove, getDoc, collection, getDocs } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/loading-spinner';
@@ -37,29 +37,28 @@ export default function ClassroomsPage() {
     setLoading(true);
 
     const fetchClassrooms = async () => {
+      const fdb = db!;
       try {
-        // Teacher: load only classrooms referenced on their profile
+        // Teacher: list all classrooms; also load joined IDs for button state
         if (profile?.role === 'teacher' && user) {
-          const teacherSnap = await getDoc(doc(db, 'teachers', user.uid));
+          const allSnap = await getDocs(collection(fdb, 'classrooms'));
+          if (isMounted) {
+            const rooms = allSnap.docs.map(d => ({ id: d.id, ...d.data() } as Classroom));
+            setClassrooms(rooms);
+          }
+
+          const teacherSnap = await getDoc(doc(fdb, 'teachers', user.uid));
           if (teacherSnap.exists()) {
             const teacherData = teacherSnap.data() as { classroomIds?: string[] };
             const ids = teacherData.classroomIds || [];
             if (isMounted) setJoinedClassrooms(ids);
-            if (ids.length > 0) {
-              const docs = await Promise.all(ids.map(id => getDoc(doc(db, 'classrooms', id))));
-              const rooms = docs.filter(d => d.exists()).map(d => ({ id: d.id, ...d.data() } as Classroom));
-              if (isMounted) setClassrooms(rooms);
-            } else if (isMounted) {
-              setClassrooms([]);
-            }
           } else if (isMounted) {
             setJoinedClassrooms([]);
-            setClassrooms([]);
           }
           // Student: load their single classroom if present
         } else if (profile?.role === 'student') {
           if ((profile as any).classroomId) {
-            const c = await getDoc(doc(db, 'classrooms', (profile as any).classroomId));
+            const c = await getDoc(doc(fdb, 'classrooms', (profile as any).classroomId));
             if (isMounted) setClassrooms(c.exists() ? [{ id: c.id, ...c.data() } as Classroom] : []);
           } else if (isMounted) {
             setClassrooms([]);

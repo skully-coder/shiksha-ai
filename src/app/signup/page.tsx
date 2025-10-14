@@ -8,8 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { auth, db } from '@/lib/firebase';
+import { doc, setDoc, updateDoc, arrayUnion, collection, query, where, getDocs } from 'firebase/firestore';import { auth, db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -68,6 +67,28 @@ export default function SignupPage() {
   async function onSubmit(values: SignupFormValues) {
     setIsLoading(true);
     try {
+      if (values.role === 'teacher' && values.class && values.section) {
+        const teachersRef = collection(db, 'teachers');
+        const existingTeacherQuery = query(
+          teachersRef,
+          where('class', '==', values.class),
+          where('section', '==', values.section.toUpperCase())
+        );
+        
+        const existingSnapshot = await getDocs(existingTeacherQuery);
+        
+        if (!existingSnapshot.empty) {
+          const existingTeacher = existingSnapshot.docs[0].data();
+          toast({
+            variant: 'destructive',
+            title: 'Class Already Assigned',
+            description: `Already a teacher is assigned to class ${values.class}-${values.section}. Please choose a different class-section.`,
+          });
+          setIsLoading(false);
+          return;
+        }
+      }
+
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
 

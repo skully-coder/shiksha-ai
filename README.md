@@ -1,4 +1,3 @@
-
 ![GitHub deployments](https://img.shields.io/github/deployments/skully-coder/shiksha-ai/production?style=for-the-badge&label=deployment)
 
 # 🎓 Shiksha AI — AI-Powered Teaching Assistant
@@ -35,8 +34,53 @@ Teachers in developing regions often face challenges such as:
 | **Styling** | ShadCN UI, Tailwind CSS |
 | **Backend** | Firebase |
 | **AI Integration** | Genkit with Google Gemini Models |
+| **Theme Management** | next-themes |
 
 Built for **scalability**, **ease of use**, and **performance**.
+
+---
+
+## 🌙 Theme Switcher
+
+Shiksha AI includes a **dynamic theme switcher** that enhances user experience by providing both light and dark mode options.
+
+### 🎨 Features
+
+- **Seamless Theme Toggle**: Switch between light and dark themes instantly
+- **System Theme Detection**: Automatically detects and respects user's system preference
+- **Persistent Theme**: Remembers user's theme choice across sessions
+- **Accessible Design**: Keyboard navigation and screen reader support
+
+### 🔄 Theme Switch Flow
+
+1. **Initial Load**: 
+   - Checks for saved theme preference in localStorage
+   - Falls back to system preference if no saved preference exists
+   - Applies the theme immediately to prevent flash of incorrect theme
+
+2. **User Interaction**:
+   - Click the theme switcher button (sun/moon icon)
+   - Theme toggles between light and dark modes
+   - Choice is automatically saved to localStorage
+
+3. **Theme Application**:
+   - CSS classes are updated on the `<html>` element
+   - Tailwind CSS dark mode variants are applied
+   - All components inherit the new theme styling
+
+### 📍 Theme Switcher Location
+
+- **Login Page**: Positioned in the top area for easy access
+- **Main Dashboard**: Available in the navigation/header area
+- **All Pages**: Consistent placement for better UX
+
+### 🛠️ Implementation Details
+
+The theme system uses:
+- `next-themes` library for theme management
+- Tailwind CSS `dark:` variants for styling
+- React Context for theme state management
+- Custom theme provider wrapping the entire application
 
 ---
 
@@ -48,6 +92,7 @@ Shiksha AI contributes to a more equitable education ecosystem by:
 - 🧾 Providing personalized lesson plans and materials  
 - 🌐 Bridging the digital divide in low-connectivity regions  
 - 👩‍🏫 Allowing teachers to focus more on student interaction  
+- 🌙 Offering comfortable viewing experience in any lighting condition
 
 ---
 

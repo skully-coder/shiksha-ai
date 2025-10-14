@@ -26,9 +26,14 @@ if (isFirebaseConfigured) {
         auth = getAuth(app);
         db = getFirestore(app);
         storage = getStorage(app);
+        console.log('Firebase initialized successfully');
     } catch (e) {
         console.error("Could not initialize Firebase. Please check your .env file.", e);
+        console.error("Firebase config:", firebaseConfig);
     }
+} else {
+    console.error("Firebase not configured. Missing environment variables.");
+    console.error("Current config:", firebaseConfig);
 }
 
 export { auth, db, storage };

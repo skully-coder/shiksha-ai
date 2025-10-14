@@ -19,6 +19,7 @@ import { LoadingSpinner } from '@/components/loading-spinner';
 import { useAuth } from '@/hooks/use-auth';
 import { Separator } from '@/components/ui/separator';
 import LoginSkeleton from "@/components/skeletons/LoginSkeleton";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address.'),
@@ -48,6 +49,17 @@ export default function LoginPage() {
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     setIsLoading(true);
+    
+    if (!auth) {
+      toast({
+        variant: 'destructive',
+        title: 'Authentication Error',
+        description: 'Authentication service not available. Please check your Firebase configuration.',
+      });
+      setIsLoading(false);
+      return;
+    }
+    
     try {
       await signInWithEmailAndPassword(auth, values.email, values.password);
       router.replace('/lesson-planner');
@@ -72,6 +84,16 @@ export default function LoginPage() {
       });
       return;
     }
+    
+    if (!auth) {
+      toast({
+        variant: 'destructive',
+        title: 'Authentication Error',
+        description: 'Authentication service not available. Please check your Firebase configuration.',
+      });
+      return;
+    }
+    
     try {
       await sendPasswordResetEmail(auth, email);
       toast({
@@ -98,6 +120,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <ThemeSwitcher />
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
            <Image 

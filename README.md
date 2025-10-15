@@ -221,6 +221,13 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                     <sub><b>Pragya</b></sub>
                 </a>
             </td>
+            <td align="center">
+                <a href="https://github.com/krisharmaa">
+                    <img src="https://avatars.githubusercontent.com/u/195412062?v=4" width="100;" alt="krisharmaa"/>
+                    <br />
+                    <sub><b>Krish Sharma</b></sub>
+                </a>
+            </td>
 		</tr>
 	<tbody>
 </table>

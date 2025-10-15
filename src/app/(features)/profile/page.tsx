@@ -24,10 +24,7 @@ import ProfileSkeleton from '@/components/skeletons/ProfileSkeleton';
 
 
 const profileUpdateSchema = z.object({
-    class: z.coerce.number({ invalid_type_error: "Grade must be a number." })
-    .min(1, { message: "Grade must be 1 or higher." })
-    .max(12, { message: "Grade must be 12 or lower." })
-    .optional(),
+    class: z.string().optional(),
     section: z.string().optional(),
 });
 

@@ -2,11 +2,12 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { BookText, Sheet, ImageIcon, BrainCircuit, Languages, LogOut, User, Users } from "lucide-react";
+import { BookText, Sheet, ImageIcon, BrainCircuit, Languages, LogOut, User, Users, School } from "lucide-react";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
+import { Badge } from "@/components/ui/badge";
 
 const teacherNavItems = [
   { href: "/lesson-planner", icon: BookText, label: "Lesson Planner" },
@@ -57,6 +58,7 @@ export function NavItems() {
   return (
     <div className="flex flex-col h-full justify-between">
       <SidebarMenu>
+        <Badge className="flex gap-2 pl-2 items-center text-md mx-auto px-5 mb-2" variant="outline"><School size={16}/>{profile?.school || "N/A"}</Badge>
         {navItems.map((item) => (
           <SidebarMenuItem key={item.href}>
             <SidebarMenuButton

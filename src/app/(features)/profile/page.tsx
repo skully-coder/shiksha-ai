@@ -174,6 +174,10 @@ export default function ProfilePage() {
                                     <span className="text-muted-foreground">Role</span>
                                     <span className="font-medium capitalize">{profile.role}</span>
                                 </div>
+                                <div className="flex justify-between border-b pb-2">
+                                    <span className="text-muted-foreground">School</span>
+                                    <span className="font-medium capitalize">{profile.school}</span>
+                                </div>
                                 {profile.role === 'teacher' && (
                                     <>
                                         <div className="flex justify-between border-b pb-2">

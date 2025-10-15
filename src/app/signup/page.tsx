@@ -17,12 +17,14 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/loading-spinner';
+import { set } from 'date-fns';
 
 const signupSchema = z.object({
     role: z.enum(['teacher', 'student']),
     name: z.string().min(2, 'Name must be at least 2 characters.'),
     email: z.string().email('Invalid email address.'),
     password: z.string().min(6, 'Password must be at least 6 characters.'),
+    school: z.string().min(2, 'School name must be at least 2 characters.'),
     class: z.string().optional(),
     section: z.string().optional(),
     rollNumber: z.string().optional(),
@@ -57,6 +59,7 @@ export default function SignupPage() {
       name: '',
       email: '',
       password: '',
+      school: '',
       class: '',
       section: '',
       rollNumber: '',
@@ -77,37 +80,44 @@ export default function SignupPage() {
           email: values.email,
           name: values.name,
           role: values.role,
+          school: values.school,
       };
       
       const collectionName = values.role === 'teacher' ? 'teachers' : 'students';
       
       if (values.role === 'student') {
+          const school = values.school!.trim().toUpperCase();
           const grade = values.class!;
           const section = values.section!.toUpperCase();
           const classroomId = `${grade}-${section}`.toUpperCase();
+          userData.school = values.school.trim().toUpperCase();;
           userData.class = grade;
           userData.section = section;
           userData.rollNumber = values.rollNumber;
           userData.classroomId = classroomId;
 
           // Add student to classroom
-          const classroomRef = doc(db, 'classrooms', classroomId);
+          const classroomRef = doc(db, 'schools', school, 'classrooms', classroomId);
           await setDoc(classroomRef, {
               grade: grade,
               section: section,
               studentIds: arrayUnion(user.uid)
           }, { merge: true });
       } else if (values.role === 'teacher') {
-          const grade = values.class!;
-          const section = values.section!.toUpperCase();
+          const school = values.school!.trim().toUpperCase();
+          const grade = values.class!.trim();
+          const section = values.section!.trim().toUpperCase();
           const classroomId = `${grade}-${section}`.toUpperCase();
           // Persist teacher's classroom membership
+          userData.school = values.school.trim().toUpperCase();;
           userData.class = grade;
           userData.section = section;
           userData.classroomIds = arrayUnion(classroomId);
-
+          // Upsert school if new
+          const schoolRef = doc(db, 'schools', school);
+          await setDoc(schoolRef, { merge: true });
           // Upsert classroom and add teacher
-          const classroomRef = doc(db, 'classrooms', classroomId);
+          const classroomRef = doc(db, 'schools', school, 'classrooms', classroomId);
           await setDoc(classroomRef, {
               grade: grade,
               section: section,
@@ -117,7 +127,7 @@ export default function SignupPage() {
 
       // Save user data to Firestore
       await setDoc(doc(db, collectionName, user.uid), userData, { merge: true });
-
+      
       toast({
         title: 'Account Created',
         description: 'You have successfully signed up!',
@@ -187,6 +197,20 @@ export default function SignupPage() {
                     <FormLabel>Full Name</FormLabel>
                     <FormControl>
                       <Input placeholder="e.g., Jane Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="school"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>School</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., MIT" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

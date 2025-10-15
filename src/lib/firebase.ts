@@ -26,7 +26,6 @@ if (isFirebaseConfigured) {
         auth = getAuth(app);
         db = getFirestore(app);
         storage = getStorage(app);
-        console.log('Firebase initialized successfully');
     } catch (e) {
         console.error("Could not initialize Firebase. Please check your .env file.", e);
         console.error("Firebase config:", firebaseConfig);

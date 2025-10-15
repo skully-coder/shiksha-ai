@@ -85,11 +85,6 @@ export default function SignupPage() {
   async function onSubmit(values: SignupFormValues) {
     setIsLoading(true);
     
-    // Debug: Check Firebase configuration
-    console.log('Firebase auth object:', auth);
-    console.log('Firebase db object:', db);
-    console.log('Signup values:', { ...values, password: '***hidden***' });
-    
     if (!auth) {
       throw new Error('Firebase Auth is not initialized');
     }
@@ -103,7 +98,6 @@ export default function SignupPage() {
     }
     
     try {
-      console.log('Attempting to create user with email:', values.email);
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
 

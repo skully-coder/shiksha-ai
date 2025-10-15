@@ -67,6 +67,23 @@ export default function SignupPage() {
   async function onSubmit(values: SignupFormValues) {
     setIsLoading(true);
     try {
+      if (!db) {
+        toast({
+          variant: 'destructive',
+          title: 'Configuration Error',
+          description: 'Database connection not available',
+        });
+        return;
+      }
+      if (!auth) {
+        toast({
+          variant: 'destructive',
+          title: 'Configuration Error',
+          description: 'Authentication service not available',
+        });
+        return;
+      }
+      
       if (values.role === 'teacher' && values.class && values.section) {
         const teachersRef = collection(db, 'teachers');
         const existingTeacherQuery = query(

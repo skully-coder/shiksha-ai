@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 import { NavItems } from "@/components/nav-items";
 import AuthGuard from "@/components/auth-guard";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
 
@@ -39,6 +40,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <SidebarInset>
             <div className="relative flex-1">
               {children}
+              <ThemeSwitcher />
             </div>
           </SidebarInset>
         </div>

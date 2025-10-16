@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/loading-spinner';
+import { ThemeSwitcher } from '@/components/theme-switcher';
 
 const signupSchema = z.object({
     role: z.enum(['teacher', 'student']),
@@ -53,6 +54,22 @@ export default function SignupPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
+  // Check if services are available
+  if (!auth || !db) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-destructive">Service Unavailable</CardTitle>
+            <CardDescription>
+              Registration service is currently unavailable. Please try again later.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
+
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -70,6 +87,27 @@ export default function SignupPage() {
 
   async function onSubmit(values: SignupFormValues) {
     setIsLoading(true);
+    
+    if (!auth) {
+      toast({
+        variant: 'destructive',
+        title: 'Service Unavailable',
+        description: 'Registration service is currently unavailable. Please try again later.',
+      });
+      setIsLoading(false);
+      return;
+    }
+    
+    if (!db) {
+      toast({
+        variant: 'destructive',
+        title: 'Service Unavailable',
+        description: 'Registration service is currently unavailable. Please try again later.',
+      });
+      setIsLoading(false);
+      return;
+    }
+    
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
@@ -127,10 +165,23 @@ export default function SignupPage() {
       });
       router.replace('/lesson-planner');
     } catch (error: any) {
+      console.error('Signup error:', error);
       let description = 'An unexpected error occurred. Please try again.';
+      
       if (error.code === 'auth/email-already-in-use') {
         description = 'This email address is already in use.';
+      } else if (error.code === 'auth/weak-password') {
+        description = 'Password is too weak. Please choose a stronger password.';
+      } else if (error.code === 'auth/invalid-email') {
+        description = 'Invalid email address format.';
+      } else if (error.code === 'auth/network-request-failed') {
+        description = 'Network error. Please check your internet connection.';
+      } else if (error.code === 'permission-denied') {
+        description = 'Permission denied. Please check Firestore rules.';
+      } else if (error.message) {
+        description = `Error: ${error.message}`;
       }
+      
       toast({
         variant: 'destructive',
         title: 'Sign Up Failed',
@@ -143,6 +194,7 @@ export default function SignupPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <ThemeSwitcher />
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="font-headline text-3xl">Create an Account</CardTitle>

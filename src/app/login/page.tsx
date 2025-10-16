@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -19,6 +18,7 @@ import { LoadingSpinner } from '@/components/loading-spinner';
 import { useAuth } from '@/hooks/use-auth';
 import { Separator } from '@/components/ui/separator';
 import LoginSkeleton from "@/components/skeletons/LoginSkeleton";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address.'),
@@ -45,9 +45,19 @@ export default function LoginPage() {
     }
   }, [user, loading, router]);
 
-
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     setIsLoading(true);
+    
+    if (!auth) {
+      toast({
+        variant: 'destructive',
+        title: 'Service Unavailable',
+        description: 'Login service is currently unavailable. Please try again later.',
+      });
+      setIsLoading(false);
+      return;
+    }
+    
     try {
       await signInWithEmailAndPassword(auth, values.email, values.password);
       router.replace('/lesson-planner');
@@ -61,7 +71,6 @@ export default function LoginPage() {
     }
   }
 
-
   const handlePasswordReset = async () => {
     const email = form.getValues('email');
     if (!email) {
@@ -72,6 +81,16 @@ export default function LoginPage() {
       });
       return;
     }
+    
+    if (!auth) {
+      toast({
+        variant: 'destructive',
+        title: 'Service Unavailable',
+        description: 'Password reset service is currently unavailable. Please try again later.',
+      });
+      return;
+    }
+    
     try {
       await sendPasswordResetEmail(auth, email);
       toast({
@@ -87,7 +106,6 @@ export default function LoginPage() {
     }
   };
 
-
   if (loading || user) {
     return (
       <div className="flex items-center justify-center h-screen bg-background">
@@ -98,6 +116,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <ThemeSwitcher />
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
            <Image 

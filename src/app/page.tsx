@@ -6,13 +6,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, Users, Lightbulb, Globe, Clock, Target, Heart, Zap } from 'lucide-react';
+import { ThemeSwitcher } from '@/components/theme-switcher';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <ThemeSwitcher />
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-emerald-600/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-emerald-600/10 dark:from-green-400/5 dark:to-emerald-400/5" />
         <div className="relative max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16">
           <div className="text-center">
             <div className="flex justify-center mb-6">
@@ -25,13 +27,13 @@ export default function Home() {
                 style={{ mixBlendMode: 'multiply' }}
               />
             </div>
-            <Badge className="mb-4 bg-green-100 text-green-800 hover:bg-green-200">
+            <Badge className="mb-4 bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-800 dark:text-green-100 dark:hover:bg-green-700">
               AI-Powered Teaching Assistant
             </Badge>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-headline text-gray-900 mb-4 sm:mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-headline text-gray-900 dark:text-white mb-4 sm:mb-6">
               Shiksha <span className="text-green-600">AI</span>
             </h1>
-            <p className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto px-2">
+            <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 max-w-3xl mx-auto px-2">
               Empowering educators in low-resource environments with intelligent tools for lesson planning, content creation, and personalized learning.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
@@ -51,13 +53,13 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-white">
+      <section className="py-12 sm:py-16 md:py-20 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 px-2">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-2">
               Powerful Features for Modern Education
             </h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
+            <p className="text-base sm:text-lg text-gray-600 dark:text-white max-w-2xl mx-auto px-4">
               Streamline your teaching workflow with AI-powered tools designed for educators.
             </p>
           </div>
@@ -179,12 +181,12 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-white">
+      <section className="py-12 sm:py-16 md:py-20 bg-white dark:bg-gray-800">
         <div className="max-w-4xl mx-auto text-center px-3 sm:px-4 md:px-6 lg:px-8">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 px-2">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-2">
             Ready to Transform Your Teaching?
           </h2>
-          <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 px-4">
+          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 px-4">
             Join thousands of educators who are already using Shiksha AI to create better learning experiences.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
@@ -203,11 +205,11 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8 sm:py-12">
+      <footer className="bg-gray-900 dark:bg-gray-950 text-white py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           <div className="text-center">
             <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Shiksha AI</h3>
-            <p className="text-gray-400 mb-4 sm:mb-6 text-sm sm:text-base px-4">
+            <p className="text-gray-400 dark:text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base px-4">
               Empowering educators with AI-powered teaching tools for a better tomorrow.
             </p>
             <div className="flex justify-center space-x-4 sm:space-x-6">

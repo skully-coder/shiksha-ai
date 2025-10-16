@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -46,15 +45,14 @@ export default function LoginPage() {
     }
   }, [user, loading, router]);
 
-
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     setIsLoading(true);
     
     if (!auth) {
       toast({
         variant: 'destructive',
-        title: 'Authentication Error',
-        description: 'Authentication service not available. Please check your Firebase configuration.',
+        title: 'Service Unavailable',
+        description: 'Login service is currently unavailable. Please try again later.',
       });
       setIsLoading(false);
       return;
@@ -73,7 +71,6 @@ export default function LoginPage() {
     }
   }
 
-
   const handlePasswordReset = async () => {
     const email = form.getValues('email');
     if (!email) {
@@ -88,8 +85,8 @@ export default function LoginPage() {
     if (!auth) {
       toast({
         variant: 'destructive',
-        title: 'Authentication Error',
-        description: 'Authentication service not available. Please check your Firebase configuration.',
+        title: 'Service Unavailable',
+        description: 'Password reset service is currently unavailable. Please try again later.',
       });
       return;
     }
@@ -108,7 +105,6 @@ export default function LoginPage() {
       });
     }
   };
-
 
   if (loading || user) {
     return (

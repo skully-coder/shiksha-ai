@@ -109,8 +109,8 @@ export default function AdminPage() {
     if (!db) {
       toast({
         variant: 'destructive',
-        title: 'Database Error',
-        description: 'Database connection not available. Please check your Firebase configuration.',
+        title: 'Service Unavailable',
+        description: 'Service is currently unavailable. Please try again later.',
       });
       setIsGenerating(false);
       return;
@@ -215,8 +215,8 @@ export default function AdminPage() {
     if (!db) {
       toast({
         variant: 'destructive',
-        title: 'Database Error',
-        description: 'Database connection not available. Please check your Firebase configuration.',
+        title: 'Service Unavailable',
+        description: 'Service is currently unavailable. Please try again later.',
       });
       setIsGenerating(false);
       return;
@@ -312,8 +312,8 @@ export default function AdminPage() {
     if (!db) {
       toast({
         variant: 'destructive',
-        title: 'Database Error',
-        description: 'Database connection not available. Please check your Firebase configuration.',
+        title: 'Service Unavailable',
+        description: 'Service is currently unavailable. Please try again later.',
       });
       setIsDeleting(false);
       return;

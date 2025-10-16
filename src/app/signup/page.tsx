@@ -51,15 +51,15 @@ export default function SignupPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Check if Firebase is properly initialized
+  // Check if services are available
   if (!auth || !db) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-destructive">Configuration Error</CardTitle>
+            <CardTitle className="text-destructive">Service Unavailable</CardTitle>
             <CardDescription>
-              Firebase is not properly configured. Please check your environment variables.
+              Registration service is currently unavailable. Please try again later.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -86,15 +86,23 @@ export default function SignupPage() {
     setIsLoading(true);
     
     if (!auth) {
-      throw new Error('Firebase Auth is not initialized');
-    }
-    
-    if (!auth) {
-      throw new Error('Firebase Authentication is not initialized');
+      toast({
+        variant: 'destructive',
+        title: 'Service Unavailable',
+        description: 'Registration service is currently unavailable. Please try again later.',
+      });
+      setIsLoading(false);
+      return;
     }
     
     if (!db) {
-      throw new Error('Firebase Firestore is not initialized');
+      toast({
+        variant: 'destructive',
+        title: 'Service Unavailable',
+        description: 'Registration service is currently unavailable. Please try again later.',
+      });
+      setIsLoading(false);
+      return;
     }
     
     try {

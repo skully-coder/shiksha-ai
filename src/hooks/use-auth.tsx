@@ -36,27 +36,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 function MissingConfigMessage() {
     return (
          <div className="flex h-screen items-center justify-center bg-background p-4">
-          <div className="w-full max-w-2xl rounded-lg border bg-card p-8 text-center shadow-lg">
-            <h1 className="text-2xl font-bold text-destructive">Configuration Incomplete</h1>
+          <div className="w-full max-w-md rounded-lg border bg-card p-8 text-center shadow-lg">
+            <h1 className="text-2xl font-bold text-destructive">Service Unavailable</h1>
             <p className="mt-4 text-muted-foreground">
-              Your Firebase API keys are missing from the <code>.env</code> file. The application cannot connect to authentication or database services without them.
+              The application is currently under maintenance. Please try again later.
             </p>
-            <p className="mt-4 text-sm">
-              Please copy the configuration from your Firebase project settings into your <code>.env</code> file.
-            </p>
-            <div className="mt-6 rounded-md bg-muted p-4 text-left font-mono text-xs text-muted-foreground">
-                <code>
-                    GOOGLE_API_KEY=...<br />
-                    NEXT_PUBLIC_FIREBASE_API_KEY=...<br />
-                    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...<br />
-                    NEXT_PUBLIC_FIREBASE_PROJECT_ID=...<br />
-                    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...<br />
-                    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...<br />
-                    NEXT_PUBLIC_FIREBASE_APP_ID=...
-                </code>
-            </div>
-             <p className="mt-4 text-xs text-muted-foreground">
-                You can find the <code>NEXT_PUBLIC_FIREBASE_...</code> values in your Firebase project's settings page. The <code>GOOGLE_API_KEY</code> is used for AI features and can be created in Google AI Studio.
+            <p className="mt-4 text-sm text-muted-foreground">
+              If this issue persists, please contact support.
             </p>
           </div>
         </div>
@@ -73,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (auth && db) {
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
         setUser(user);
-        if (user) {
+        if (user && db) {
           // Fetch profile
           let userProfile: UserProfile | null = null;
           try {
@@ -97,15 +83,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
           setProfile(userProfile);
           
-          if (userProfile?.role === 'teacher') {
+          if (userProfile?.role === 'teacher' && db) {
             setClassrooms([]);
             try {
-              const teacherRef = doc(db, 'teachers', user.uid);
+              const database = db; // Create a non-null reference for TypeScript
+              const teacherRef = doc(database, 'teachers', user.uid);
               const teacherSnap = await getDoc(teacherRef);
               if (teacherSnap.exists()) {
                 const teacherData = teacherSnap.data();
                 if (teacherData.classroomIds && teacherData.classroomIds.length > 0) {
-                  const classroomPromises = teacherData.classroomIds.map((id: string) => getDoc(doc(db, 'classrooms', id)));
+                  const classroomPromises = teacherData.classroomIds.map((id: string) => getDoc(doc(database, 'classrooms', id)));
                   const classroomDocs = await Promise.all(classroomPromises);
                   const classroomsData = classroomDocs
                     .filter(d => d.exists())

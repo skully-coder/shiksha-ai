@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, deleteUser } from 'firebase/auth';
 import { doc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
@@ -70,9 +70,10 @@ export default function SignupPage() {
 
   async function onSubmit(values: SignupFormValues) {
     setIsLoading(true);
+    let user: any = null;
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-      const user = userCredential.user;
+      user = userCredential.user;
 
       // Prepare user data for Firestore
       const userData: any = {
@@ -138,6 +139,8 @@ export default function SignupPage() {
       if (error.code === 'auth/email-already-in-use') {
         description = 'This email address is already in use.';
       }
+      await deleteUser(user);
+      console.log("User deleted");
       toast({
         variant: 'destructive',
         title: 'Sign Up Failed',

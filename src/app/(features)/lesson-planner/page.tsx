@@ -222,6 +222,7 @@ export default function LessonPlannerPage() {
       const postData = {
         authorId: user.uid,
         authorName: profile.name,
+        school: profile.school,
         createdAt: serverTimestamp(),
         type: 'lessonPlan',
         lessonPlanId: lessonPlanRef.id,
@@ -230,7 +231,7 @@ export default function LessonPlannerPage() {
       };
 
       if (db) {
-        await addDoc(collection(db, 'classrooms', selectedClassroom, 'posts'), postData);
+        await addDoc(collection(db, 'schools', profile.school!, 'classrooms', selectedClassroom, 'posts'), postData);
       }
       
       const classroom = classrooms.find(c => c.id === selectedClassroom);

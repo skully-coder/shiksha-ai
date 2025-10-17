@@ -90,7 +90,7 @@ export default function ClassroomDetailPage() {
     if (!db || !user || !classroomId) return;
     setLoading(true);
     try {
-      const classroomRef = doc(db, 'classrooms', classroomId);
+      const classroomRef = doc(db, 'schools', profile?.school!, 'classrooms', classroomId);
       const classroomSnap = await getDoc(classroomRef);
 
       if (!classroomSnap.exists()) {
@@ -147,7 +147,7 @@ export default function ClassroomDetailPage() {
 
   useEffect(() => {
     if(!db || !classroomId) return;
-    const postsQuery = query(collection(db, 'classrooms', classroomId, 'posts'), orderBy('createdAt', 'asc'));
+    const postsQuery = query(collection(db, 'schools', profile?.school!, 'classrooms', classroomId, 'posts'), orderBy('createdAt', 'asc'));
     
     const unsubscribe = onSnapshot(postsQuery, (querySnapshot) => {
       const postsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Post));
@@ -219,7 +219,7 @@ export default function ClassroomDetailPage() {
         
         const postType = file.type.startsWith('image/') ? 'image' : 'pdf';
 
-        await addDoc(collection(db, 'classrooms', classroomId, 'posts'), {
+        await addDoc(collection(db, 'schools', profile.school!, 'classrooms', classroomId, 'posts'), {
           authorId: user.uid,
           authorName: profile.name,
           content: values.message || '',
@@ -229,7 +229,7 @@ export default function ClassroomDetailPage() {
           fileUrl: downloadURL,
         });
       } else {
-        await addDoc(collection(db, 'classrooms', classroomId, 'posts'), {
+        await addDoc(collection(db, 'schools', profile.school!, 'classrooms', classroomId, 'posts'), {
           authorId: user.uid,
           authorName: profile.name,
           content: values.message,
@@ -252,7 +252,7 @@ export default function ClassroomDetailPage() {
     if (!db || !user || !classroomId) return;
 
     try {
-      const postRef = doc(db, 'classrooms', classroomId, 'posts', postId);
+      const postRef = doc(db,'schools', profile?.school!, 'classrooms', classroomId, 'posts', postId);
       await deleteDoc(postRef);
       toast({
         title: 'Success',

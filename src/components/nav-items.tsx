@@ -7,27 +7,30 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
+import { useTranslation } from 'react-i18next';
 
 const teacherNavItems = [
-  { href: "/lesson-planner", icon: BookText, label: "Lesson Planner" },
-  { href: "/classrooms", icon: Users, label: "Classrooms" },
-  { href: "/differentiated-worksheets", icon: Sheet, label: "Worksheets" },
-  { href: "/visual-aids", icon: ImageIcon, label: "Visual Aids" },
-  { href: "/knowledge-base", icon: BrainCircuit, label: "Knowledge Base" },
-  { href: "/local-content", icon: Languages, label: "Local Content" },
+  { href: "/lesson-planner", icon: BookText, labelKey: "Lesson Planner" },
+  { href: "/classrooms", icon: Users, labelKey: "Classrooms" },
+  { href: "/differentiated-worksheets", icon: Sheet, labelKey: "Worksheets" },
+  { href: "/visual-aids", icon: ImageIcon, labelKey: "Visual Aids" },
+  { href: "/knowledge-base", icon: BrainCircuit, labelKey: "Knowledge Base" },
+  { href: "/local-content", icon: Languages, labelKey: "Local Content" },
 ];
 
 const studentNavItems = [
-    { href: "/classrooms", icon: Users, label: "Classroom" },
-    { href: "/knowledge-base", icon: BrainCircuit, label: "Knowledge Base" },
-    { href: "/local-content", icon: Languages, label: "Local Content" },
+  { href: "/classrooms", icon: Users, labelKey: "Classrooms" },
+  { href: "/knowledge-base", icon: BrainCircuit, labelKey: "Knowledge Base" },
+  { href: "/local-content", icon: Languages, labelKey: "Local Content" },
 ];
+
 
 export function NavItems() {
   const pathname = usePathname();
   const router = useRouter();
   const { toast } = useToast();
   const { user, profile } = useAuth();
+  const { t, i18n } = useTranslation();
 
   const handleLogout = async () => {
     try {
@@ -36,18 +39,18 @@ export function NavItems() {
       }
       router.push('/login');
       toast({
-          variant: 'success',
-          title: "Logged Out",
-          description: "You have been successfully logged out.",
-          style: { backgroundColor: "#fff", color: "#222" } // Set background to white, text to dark
+          variant: 'default',
+          title: t("loggedOut"),
+          description: t("successfullyLoggedOut"),
+          style: { backgroundColor: "#fff", color: "#222" }
       });
     } catch (error) {
       console.error("Error signing out: ", error);
        toast({
         variant: 'destructive',
-        title: 'Logout Failed',
-        description: 'An unexpected error occurred during logout.',
-        style: { backgroundColor: "#fff", color: "#222" } // Set background to white, text to dark
+        title: t("logoutFailed"),
+        description: t("unexpectedLogoutError"),
+        style: { backgroundColor: "#fff", color: "#222" }
       });
     }
   };
@@ -62,29 +65,46 @@ export function NavItems() {
             <SidebarMenuButton
               asChild
               isActive={pathname.startsWith(item.href)}
-              tooltip={item.label}
+              tooltip={t(item.labelKey)}
             >
               <Link href={item.href}>
                 <item.icon />
-                <span>{item.label}</span>
+                <span>{t(item.labelKey)}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}
       </SidebarMenu>
+      
       <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton tooltip={t("selectLanguage")}>
+            <select
+              value={i18n.language}
+              onChange={(e) => i18n.changeLanguage(e.target.value)}
+              className="bg-transparent border-none text-sm text-gray-800 dark:text-white"
+            >
+              <option value="en">English</option>
+              <option value="hi">Hindi</option>
+              <option value="mr">Marathi</option>
+              <option value="bn">Bengali</option>
+              <option value="ta">Tamil</option>
+            </select>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+
          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Profile" isActive={pathname === '/profile'}>
+            <SidebarMenuButton asChild tooltip={t("profile")} isActive={pathname === '/profile'}>
               <Link href="/profile">
                 <User />
-                <span className="truncate">{user?.email ?? "Profile"}</span>
+                <span className="truncate">{user?.email ?? t("profile")}</span>
               </Link>
             </SidebarMenuButton>
         </SidebarMenuItem>
         <SidebarMenuItem>
-            <SidebarMenuButton onClick={handleLogout} tooltip="Logout">
+            <SidebarMenuButton onClick={handleLogout} tooltip={t("logout")}>
               <LogOut />
-              <span>Logout</span>
+              <span>{t("logout")}</span>
             </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>

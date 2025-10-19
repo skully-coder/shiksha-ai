@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -19,6 +18,7 @@ import { Download } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
 import FeaturePageSkeleton from "@/components/skeletons/FeaturePageSkeleton";
+import { useTranslation } from 'react-i18next';
 
 
 const visualAidSchema = z.object({
@@ -31,7 +31,7 @@ export default function VisualAidsPage() {
   const { toast } = useToast();
   const { profile, loading: authLoading } = useAuth();
   const router = useRouter();
-
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!authLoading && profile && profile.role !== 'teacher') {
@@ -56,8 +56,8 @@ export default function VisualAidsPage() {
       console.error('Error generating visual aid:', error);
       toast({
         variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to generate visual aid. Please try again.',
+        title: t('Error'),
+        description: t('Failed to generate visual aid. Please try again.'),
       });
     } finally {
       setIsLoading(false);
@@ -68,8 +68,8 @@ export default function VisualAidsPage() {
     if (!visualAid) {
       toast({
         variant: 'destructive',
-        title: 'Error',
-        description: 'No visual aid to export.',
+        title: t('Error'),
+        description: t('No visual aid to export.'),
       });
       return;
     }
@@ -84,8 +84,8 @@ export default function VisualAidsPage() {
     link.click();
     document.body.removeChild(link);
     toast({
-        title: "Success",
-        description: "Visual aid has been downloaded."
+        title: t('Success'),
+        description: t('Visual aid has been downloaded.'),
     });
   };
 
@@ -97,14 +97,14 @@ export default function VisualAidsPage() {
   return (
     <div className="flex flex-col h-full">
       <header className="flex items-center justify-between p-4 border-b md:hidden">
-        <h1 className="font-headline text-xl font-bold text-primary">Visual Aids</h1>
+        <h1 className="font-headline text-xl font-bold text-primary">{t('Visual Aids')}</h1>
         <SidebarTrigger />
       </header>
       <div className="flex-1 p-4 md:p-8 overflow-auto">
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
-          <CardTitle className="font-headline text-2xl">Visual Aid Generator</CardTitle>
-          <CardDescription>Describe a simple line drawing or chart to explain a concept.</CardDescription>
+          <CardTitle className="font-headline text-2xl">{t('Visual Aid Generator')}</CardTitle>
+          <CardDescription>{t('Describe a simple line drawing or chart to explain a concept.')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -114,9 +114,9 @@ export default function VisualAidsPage() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>{t('Description')}</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="e.g., A simple diagram of the water cycle showing evaporation, condensation, and precipitation." {...field} rows={4} />
+                      <Textarea placeholder={t('e.g., A simple diagram of the water cycle showing evaporation, condensation, and precipitation.')} {...field} rows={4} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -124,7 +124,7 @@ export default function VisualAidsPage() {
               />
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? <LoadingSpinner className="mr-2 h-4 w-4" /> : null}
-                Generate Visual Aid
+                {t('Generate Visual Aid')}
               </Button>
             </form>
           </Form>
@@ -139,19 +139,19 @@ export default function VisualAidsPage() {
             <Card className="w-full bg-secondary/50">
               <CardHeader>
                   <div className="flex justify-between items-center">
-                    <CardTitle className="font-headline text-xl">Generated Visual Aid</CardTitle>
+                    <CardTitle className="font-headline text-xl">{t('Generated Visual Aid')}</CardTitle>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={handleExport}
-                      aria-label="Export Visual Aid"
+                      aria-label={t('Export Visual Aid')}
                     >
                       <Download className="h-5 w-5" />
                     </Button>
                   </div>
                 </CardHeader>
               <CardContent className="flex justify-center p-6">
-                <Image src={visualAid} alt="Generated visual aid" width={512} height={512} className="rounded-md" />
+                <Image src={visualAid} alt={t('Generated visual aid')} width={512} height={512} className="rounded-md" />
               </CardContent>
             </Card>
           </CardFooter>

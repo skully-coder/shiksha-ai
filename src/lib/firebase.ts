@@ -1,7 +1,7 @@
 
 import { initializeApp, getApp, getApps, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
-import { getFirestore, type Firestore } from 'firebase/firestore';
+import { getFirestore, initializeFirestore, type Firestore } from 'firebase/firestore';
 import { getStorage, type FirebaseStorage } from 'firebase/storage';
 
 export const firebaseConfig = {
@@ -24,6 +24,19 @@ if (isFirebaseConfigured) {
     try {
         app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
         auth = getAuth(app);
+        if (process.env.NEXT_PUBLIC_FIRESTORE_FORCE_LONGPOLL === 'true') {
+            try {
+                initializeFirestore(app, {
+                    experimentalForceLongPolling: true,
+                });
+            } catch {}
+        } else if (process.env.NEXT_PUBLIC_FIRESTORE_LONGPOLL === 'true') {
+            try {
+                initializeFirestore(app, {
+                    experimentalAutoDetectLongPolling: true,
+                });
+            } catch {}
+        }
         db = getFirestore(app);
         storage = getStorage(app);
     } catch (e) {

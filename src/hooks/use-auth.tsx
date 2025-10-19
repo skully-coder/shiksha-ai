@@ -4,7 +4,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode, useMemo } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth, isFirebaseConfigured, db } from '@/lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, enableNetwork } from 'firebase/firestore';
 
 interface UserProfile {
     uid: string;
@@ -71,6 +71,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (auth && db) {
+      (async () => {
+        if (process.env.NEXT_PUBLIC_FIRESTORE_ENABLE_NETWORK === 'true') {
+          try { await enableNetwork(db!); } catch {}
+        }
+      })();
+      const fdb = db!;
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
         setUser(user);
         if (user) {
@@ -78,14 +84,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           let userProfile: UserProfile | null = null;
           try {
             // Try fetching from 'teachers' collection first
-            let docRef = doc(db, 'teachers', user.uid);
+            let docRef = doc(fdb, 'teachers', user.uid);
             let docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
                 userProfile = docSnap.data() as UserProfile;
             } else {
                 // If not found, try 'students' collection
-                docRef = doc(db, 'students', user.uid);
+                docRef = doc(fdb, 'students', user.uid);
                 docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
@@ -100,12 +106,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (userProfile?.role === 'teacher') {
             setClassrooms([]);
             try {
-              const teacherRef = doc(db, 'teachers', user.uid);
+              const teacherRef = doc(fdb, 'teachers', user.uid);
               const teacherSnap = await getDoc(teacherRef);
               if (teacherSnap.exists()) {
                 const teacherData = teacherSnap.data();
                 if (teacherData.classroomIds && teacherData.classroomIds.length > 0) {
-                  const classroomPromises = teacherData.classroomIds.map((id: string) => getDoc(doc(db, 'classrooms', id)));
+                  const classroomPromises = teacherData.classroomIds.map((id: string) => getDoc(doc(fdb, 'classrooms', id)));
                   const classroomDocs = await Promise.all(classroomPromises);
                   const classroomsData = classroomDocs
                     .filter(d => d.exists())

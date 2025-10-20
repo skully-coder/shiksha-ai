@@ -10,18 +10,18 @@ import { useAuth } from "@/hooks/use-auth";
 import { useTranslation } from 'react-i18next';
 
 const teacherNavItems = [
-  { href: "/lesson-planner", icon: BookText, labelKey: "Lesson Planner" },
-  { href: "/classrooms", icon: Users, labelKey: "Classrooms" },
-  { href: "/differentiated-worksheets", icon: Sheet, labelKey: "Worksheets" },
-  { href: "/visual-aids", icon: ImageIcon, labelKey: "Visual Aids" },
-  { href: "/knowledge-base", icon: BrainCircuit, labelKey: "Knowledge Base" },
-  { href: "/local-content", icon: Languages, labelKey: "Local Content" },
+  { href: "/lesson-planner", icon: BookText, label: "Lesson Planner" },
+  { href: "/classrooms", icon: Users, label: "Classrooms" },
+  { href: "/differentiated-worksheets", icon: Sheet, label: "Worksheets" },
+  { href: "/visual-aids", icon: ImageIcon, label: "Visual Aids" },
+  { href: "/knowledge-base", icon: BrainCircuit, label: "Knowledge Base" },
+  { href: "/local-content", icon: Languages, label: "Local Content" },
 ];
 
 const studentNavItems = [
-  { href: "/classrooms", icon: Users, labelKey: "Classrooms" },
-  { href: "/knowledge-base", icon: BrainCircuit, labelKey: "Knowledge Base" },
-  { href: "/local-content", icon: Languages, labelKey: "Local Content" },
+  { href: "/classrooms", icon: Users, label: "Classrooms" },
+  { href: "/knowledge-base", icon: BrainCircuit, label: "Knowledge Base" },
+  { href: "/local-content", icon: Languages, label: "Local Content" },
 ];
 
 
@@ -65,11 +65,11 @@ export function NavItems() {
             <SidebarMenuButton
               asChild
               isActive={pathname.startsWith(item.href)}
-              tooltip={t(item.labelKey)}
+              tooltip={t(item.label)}
             >
               <Link href={item.href}>
                 <item.icon />
-                <span>{t(item.labelKey)}</span>
+                <span>{t(item.label)}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

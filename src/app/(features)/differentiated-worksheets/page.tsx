@@ -168,7 +168,7 @@ export default function DifferentiatedWorksheetsPage() {
   };
 
   if (authLoading || !profile || profile.role !== 'teacher') {
-    return <PageSkeleton><></></PageSkeleton>;
+    return <PageSkeleton></PageSkeleton>;
   }
 
   return (

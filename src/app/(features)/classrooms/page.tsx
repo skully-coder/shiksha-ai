@@ -30,7 +30,9 @@ export default function ClassroomsPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (authLoading || !db) return;
+    if (authLoading || !db) {
+      return;
+    } 
 
     let isMounted = true;
     setLoading(true);
@@ -50,13 +52,19 @@ export default function ClassroomsPage() {
             const teacherData = teacherSnap.data() as { classroomIds?: string[] };
             const ids = teacherData.classroomIds || [];
             if (isMounted) setJoinedClassrooms(ids);
-          } else if (isMounted) setJoinedClassrooms([]);
+          } else if (isMounted) {
+            setJoinedClassrooms([]);
+          }
         } else if (profile?.role === 'student') {
           if ((profile as any).classroomId) {
             const c = await getDoc(doc(fdb, 'classrooms', (profile as any).classroomId));
             if (isMounted) setClassrooms(c.exists() ? [{ id: c.id, ...c.data() } as Classroom] : []);
-          } else if (isMounted) setClassrooms([]);
-        } else if (isMounted) setClassrooms([]);
+          } else if (isMounted){
+            setClassrooms([]);
+          }
+        } else if (isMounted) {
+            setClassrooms([]);
+        } 
       } catch (error: any) {
         console.error('Error fetching classrooms:', error);
         let description = t("Could not load classrooms.");
@@ -103,7 +111,9 @@ export default function ClassroomsPage() {
     }
   };
 
-  if (authLoading || loading) return <FeaturePageSkeleton cardCount={6} />;
+  if (authLoading || loading) {
+    return <FeaturePageSkeleton cardCount={6} />;
+  }
 
   if (profile?.role === 'student') {
     const studentClassroom = classrooms.find(c => c.id === profile.classroomId);

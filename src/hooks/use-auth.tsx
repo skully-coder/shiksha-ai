@@ -71,6 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (auth && db) {
+      
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
         setUser(user);
         if (user) {
@@ -78,14 +79,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           let userProfile: UserProfile | null = null;
           try {
             // Try fetching from 'teachers' collection first
-            let docRef = doc(db, 'teachers', user.uid);
+            let docRef = doc(db!, 'teachers', user.uid);
             let docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
                 userProfile = docSnap.data() as UserProfile;
             } else {
                 // If not found, try 'students' collection
-                docRef = doc(db, 'students', user.uid);
+                docRef = doc(db!, 'students', user.uid);
                 docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
@@ -100,12 +101,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (userProfile?.role === 'teacher') {
             setClassrooms([]);
             try {
-              const teacherRef = doc(db, 'teachers', user.uid);
+              const teacherRef = doc(db!, 'teachers', user.uid);
               const teacherSnap = await getDoc(teacherRef);
               if (teacherSnap.exists()) {
                 const teacherData = teacherSnap.data();
                 if (teacherData.classroomIds && teacherData.classroomIds.length > 0) {
-                  const classroomPromises = teacherData.classroomIds.map((id: string) => getDoc(doc(db, 'classrooms', id)));
+                  const classroomPromises = teacherData.classroomIds.map((id: string) => getDoc(doc(db!, 'classrooms', id)));
                   const classroomDocs = await Promise.all(classroomPromises);
                   const classroomsData = classroomDocs
                     .filter(d => d.exists())

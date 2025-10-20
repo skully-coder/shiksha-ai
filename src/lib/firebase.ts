@@ -21,18 +21,10 @@ let db: Firestore | null = null;
 let storage: FirebaseStorage | null = null;
 
 if (isFirebaseConfigured) {
-    try {
-        app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-        auth = getAuth(app);
-        db = getFirestore(app);
-        storage = getStorage(app);
-    } catch (e) {
-        console.error("Could not initialize Firebase. Please check your .env file.", e);
-        console.error("Firebase config:", firebaseConfig);
-    }
-} else {
-    console.error("Firebase not configured. Missing environment variables.");
-    console.error("Current config:", firebaseConfig);
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+    auth = getAuth(app);
+    db = getFirestore(app);
+    storage = getStorage(app);
 }
 
 export { auth, db, storage };

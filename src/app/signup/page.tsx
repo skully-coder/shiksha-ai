@@ -162,7 +162,6 @@ export default function SignupPage() {
       });
       router.replace('/lesson-planner');
     } catch (error: any) {
-      console.error('Signup error:', error);
       let description = 'An unexpected error occurred. Please try again.';
       
       if (error.code === 'auth/email-already-in-use') {

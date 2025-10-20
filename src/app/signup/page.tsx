@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { createUserWithEmailAndPassword, deleteUser } from 'firebase/auth';
-import { doc, addDoc, setDoc, updateDoc, arrayUnion, getDocs, collection } from 'firebase/firestore';
+import { doc, setDoc, updateDoc, arrayUnion, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,33 +33,33 @@ import { LoadingSpinner } from '@/components/loading-spinner';
 import { ChevronsUpDown } from "lucide-react";
 
 const signupSchema = z.object({
-  role: z.enum(['teacher', 'student']),
-  name: z.string().min(2, 'Name must be at least 2 characters.'),
-  email: z.string().email('Invalid email address.'),
-  password: z.string().min(6, 'Password must be at least 6 characters.'),
-  school: z.object({
+    role: z.enum(['teacher', 'student']),
+    name: z.string().min(2, 'Name must be at least 2 characters.'),
+    email: z.string().email('Invalid email address.'),
+    password: z.string().min(6, 'Password must be at least 6 characters.'),
+    school: z.object({
     name: z.string().min(2, "School name must be at least 2 characters."),
     id: z.string(),
   }),
-  class: z.string().optional(),
-  section: z.string().optional(),
-  rollNumber: z.string().optional(),
-}).superRefine((data, ctx) => {
-  const needsClassSection = data.role === 'student' || data.role === 'teacher';
-  if (needsClassSection) {
-    if (!data.class) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Class is required.', path: ['class'] });
+    class: z.string().optional(),
+    section: z.string().optional(),
+    rollNumber: z.string().optional(),
+  }).superRefine((data, ctx) => {
+    const needsClassSection = data.role === 'student' || data.role === 'teacher';
+    if (needsClassSection) {
+      if (!data.class) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Class is required.', path: ['class'] });
+      }
+      if (!data.section) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Section is required.', path: ['section'] });
+      }
     }
-    if (!data.section) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Section is required.', path: ['section'] });
+    if (data.role === 'student') {
+      if (!data.rollNumber) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Roll number is required.', path: ['rollNumber'] });
+      }
     }
-  }
-  if (data.role === 'student') {
-    if (!data.rollNumber) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Roll number is required.', path: ['rollNumber'] });
-    }
-  }
-});
+  });
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 type SchoolForm = z.infer<typeof signupSchema>["school"];
@@ -74,7 +74,7 @@ export default function SignupPage() {
 
   useEffect(() => {
     const fetchSchools = async () => {
-      const snapshot = await getDocs(collection(db, "schools"));
+      const snapshot = await getDocs(collection(db!, "schools"));
       const list = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -104,6 +104,23 @@ export default function SignupPage() {
     setIsLoading(true);
     let user: any = null;
     try {
+      if (!db) {
+        toast({
+          variant: 'destructive',
+          title: 'Configuration Error',
+          description: 'Database connection not available',
+        });
+        return;
+      }
+      if (!auth) {
+        toast({
+          variant: 'destructive',
+          title: 'Configuration Error',
+          description: 'Authentication service not available',
+        });
+        return;
+      }
+
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       user = userCredential.user;
 
@@ -139,25 +156,40 @@ export default function SignupPage() {
           studentIds: arrayUnion(user.uid)
         }, { merge: true });
       } else if (values.role === 'teacher') {
-        const grade = values.class!.trim();
-        const section = values.section!.trim().toUpperCase();
-        const classroomId = `${grade}-${section}`.toUpperCase();
-        // Persist teacher's classroom membership
-        userData.class = grade;
-        userData.section = section;
-        userData.classroomIds = arrayUnion(classroomId);
-        
-        // Upsert classroom and add teacher
-        const classroomRef = doc(db, 'schools', schoolform.id, 'classrooms', classroomId);
-        await setDoc(classroomRef, {
-          school:{
-            name: schoolform.name,
-            id: schoolform.id
-          },
-          grade: grade,
-          section: section,
-          teacherIds: arrayUnion(user.uid)
-        }, { merge: true });
+          const teachersRef = collection(db, 'teachers');
+          const existingTeacherQuery = query(
+            teachersRef,
+            where('class', '==', values.class),
+            where('section', '==', values.section?.toUpperCase())
+          );
+          
+          const existingSnapshot = await getDocs(existingTeacherQuery);
+          
+          if (!existingSnapshot.empty) {
+            const existingTeacher = existingSnapshot.docs[0].data();
+            toast({
+              variant: 'destructive',
+              title: 'Class Already Assigned',
+              description: `Already a teacher is assigned to class ${values.class}-${values.section}. Please choose a different class-section.`,
+            });
+            setIsLoading(false);
+            return;
+          }
+          const grade = values.class!;
+          const section = values.section!.toUpperCase();
+          const classroomId = `${grade}-${section}`.toUpperCase();
+          // Persist teacher's classroom membership
+          userData.class = grade;
+          userData.section = section;
+          userData.classroomIds = arrayUnion(classroomId);
+
+          // Upsert classroom and add teacher
+          const classroomRef = doc(db, 'classrooms', classroomId);
+          await setDoc(classroomRef, {
+              grade: grade,
+              section: section,
+              teacherIds: arrayUnion(user.uid)
+          }, { merge: true });
       }
 
       // Save user data to Firestore
@@ -280,7 +312,7 @@ export default function SignupPage() {
                                     size="sm"
                                     onClick={async () => {
                                       setOpen(false);
-                                      const docRef = await addDoc(collection(db, "schools"), {
+                                      const docRef = await addDoc(collection(db!, "schools"), {
                                         name: schoolform?.name,
                                       });
                                       setSchoolform({ name: schoolform!.name, id: docRef.id });

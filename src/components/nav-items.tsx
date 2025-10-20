@@ -37,7 +37,7 @@ export function NavItems() {
       }
       router.push('/login');
       toast({
-          variant: 'success',
+          variant: 'default',
           title: "Logged Out",
           description: "You have been successfully logged out.",
           style: { backgroundColor: "#fff", color: "#222" } // Set background to white, text to dark
@@ -58,7 +58,7 @@ export function NavItems() {
   return (
     <div className="flex flex-col h-full justify-between">
       <SidebarMenu>
-        <Badge className="flex gap-2 pl-2 items-center text-md mx-auto px-5 mb-2" variant="outline"><School size={16}/>{profile?.school || "N/A"}</Badge>
+        <Badge className="flex gap-2 pl-2 items-center text-md mx-auto px-5 mb-2" variant="outline"><School size={16}/>{profile?.school?.name || "N/A"}</Badge>
         {navItems.map((item) => (
           <SidebarMenuItem key={item.href}>
             <SidebarMenuButton

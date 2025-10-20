@@ -231,7 +231,7 @@ export default function LessonPlannerPage() {
       };
 
       if (db) {
-        await addDoc(collection(db, 'schools', profile.school!, 'classrooms', selectedClassroom, 'posts'), postData);
+        await addDoc(collection(db, 'schools', profile.school!.id, 'classrooms', selectedClassroom, 'posts'), postData);
       }
       
       const classroom = classrooms.find(c => c.id === selectedClassroom);

@@ -176,7 +176,7 @@ export default function ProfilePage() {
                                 </div>
                                 <div className="flex justify-between border-b pb-2">
                                     <span className="text-muted-foreground">School</span>
-                                    <span className="font-medium capitalize">{profile.school}</span>
+                                    <span className="font-medium capitalize">{profile.school!.name}</span>
                                 </div>
                                 {profile.role === 'teacher' && (
                                     <>

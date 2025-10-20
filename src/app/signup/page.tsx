@@ -1,56 +1,88 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { createUserWithEmailAndPassword, deleteUser } from 'firebase/auth';
-import { doc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { doc, addDoc, setDoc, updateDoc, arrayUnion, getDocs, collection } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/loading-spinner';
-import { set } from 'date-fns';
+import { ChevronsUpDown } from "lucide-react";
 
 const signupSchema = z.object({
-    role: z.enum(['teacher', 'student']),
-    name: z.string().min(2, 'Name must be at least 2 characters.'),
-    email: z.string().email('Invalid email address.'),
-    password: z.string().min(6, 'Password must be at least 6 characters.'),
-    school: z.string().min(2, 'School name must be at least 2 characters.'),
-    class: z.string().optional(),
-    section: z.string().optional(),
-    rollNumber: z.string().optional(),
-  }).superRefine((data, ctx) => {
-    const needsClassSection = data.role === 'student' || data.role === 'teacher';
-    if (needsClassSection) {
-      if (!data.class) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Class is required.', path: ['class'] });
-      }
-      if (!data.section) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Section is required.', path: ['section'] });
-      }
+  role: z.enum(['teacher', 'student']),
+  name: z.string().min(2, 'Name must be at least 2 characters.'),
+  email: z.string().email('Invalid email address.'),
+  password: z.string().min(6, 'Password must be at least 6 characters.'),
+  school: z.object({
+    name: z.string().min(2, "School name must be at least 2 characters."),
+    id: z.string(),
+  }),
+  class: z.string().optional(),
+  section: z.string().optional(),
+  rollNumber: z.string().optional(),
+}).superRefine((data, ctx) => {
+  const needsClassSection = data.role === 'student' || data.role === 'teacher';
+  if (needsClassSection) {
+    if (!data.class) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Class is required.', path: ['class'] });
     }
-    if (data.role === 'student') {
-      if (!data.rollNumber) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Roll number is required.', path: ['rollNumber'] });
-      }
+    if (!data.section) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Section is required.', path: ['section'] });
     }
-  });
+  }
+  if (data.role === 'student') {
+    if (!data.rollNumber) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Roll number is required.', path: ['rollNumber'] });
+    }
+  }
+});
 
 type SignupFormValues = z.infer<typeof signupSchema>;
+type SchoolForm = z.infer<typeof signupSchema>["school"];
 
 export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [schools, setSchools] = useState<any>([]);
+  const [schoolform, setSchoolform] = useState<SchoolForm>({ name: "", id: "" });
+
+  useEffect(() => {
+    const fetchSchools = async () => {
+      const snapshot = await getDocs(collection(db, "schools"));
+      const list = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setSchools(list);
+    };
+    fetchSchools();
+  }, []);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -59,7 +91,7 @@ export default function SignupPage() {
       name: '',
       email: '',
       password: '',
-      school: '',
+      school: {name: '', id: ''},
       class: '',
       section: '',
       rollNumber: '',
@@ -77,58 +109,60 @@ export default function SignupPage() {
 
       // Prepare user data for Firestore
       const userData: any = {
-          uid: user.uid,
-          email: values.email,
-          name: values.name,
-          role: values.role,
-          school: values.school,
+        uid: user.uid,
+        email: values.email,
+        name: values.name,
+        role: values.role,
+        school: schoolform,
       };
-      
-      const collectionName = values.role === 'teacher' ? 'teachers' : 'students';
-      
-      if (values.role === 'student') {
-          const school = values.school!.trim().toUpperCase();
-          const grade = values.class!;
-          const section = values.section!.toUpperCase();
-          const classroomId = `${grade}-${section}`.toUpperCase();
-          userData.school = values.school.trim().toUpperCase();;
-          userData.class = grade;
-          userData.section = section;
-          userData.rollNumber = values.rollNumber;
-          userData.classroomId = classroomId;
 
-          // Add student to classroom
-          const classroomRef = doc(db, 'schools', school, 'classrooms', classroomId);
-          await setDoc(classroomRef, {
-              grade: grade,
-              section: section,
-              studentIds: arrayUnion(user.uid)
-          }, { merge: true });
+      const collectionName = values.role === 'teacher' ? 'teachers' : 'students';
+
+      if (values.role === 'student') {
+        const grade = values.class!;
+        const section = values.section!.toUpperCase();
+        const classroomId = `${grade}-${section}`.toUpperCase();
+        userData.class = grade;
+        userData.section = section;
+        userData.rollNumber = values.rollNumber;
+        userData.classroomId = classroomId;
+
+        // Add student to classroom
+        const classroomRef = doc(db, 'schools', schoolform.id, 'classrooms', classroomId);
+        await setDoc(classroomRef, {
+          school:{
+            name: schoolform.name,
+            id: schoolform.id
+          },
+          grade: grade,
+          section: section,
+          studentIds: arrayUnion(user.uid)
+        }, { merge: true });
       } else if (values.role === 'teacher') {
-          const school = values.school!.trim().toUpperCase();
-          const grade = values.class!.trim();
-          const section = values.section!.trim().toUpperCase();
-          const classroomId = `${grade}-${section}`.toUpperCase();
-          // Persist teacher's classroom membership
-          userData.school = values.school.trim().toUpperCase();;
-          userData.class = grade;
-          userData.section = section;
-          userData.classroomIds = arrayUnion(classroomId);
-          // Upsert school if new
-          const schoolRef = doc(db, 'schools', school);
-          await setDoc(schoolRef, { merge: true });
-          // Upsert classroom and add teacher
-          const classroomRef = doc(db, 'schools', school, 'classrooms', classroomId);
-          await setDoc(classroomRef, {
-              grade: grade,
-              section: section,
-              teacherIds: arrayUnion(user.uid)
-          }, { merge: true });
+        const grade = values.class!.trim();
+        const section = values.section!.trim().toUpperCase();
+        const classroomId = `${grade}-${section}`.toUpperCase();
+        // Persist teacher's classroom membership
+        userData.class = grade;
+        userData.section = section;
+        userData.classroomIds = arrayUnion(classroomId);
+        
+        // Upsert classroom and add teacher
+        const classroomRef = doc(db, 'schools', schoolform.id, 'classrooms', classroomId);
+        await setDoc(classroomRef, {
+          school:{
+            name: schoolform.name,
+            id: schoolform.id
+          },
+          grade: grade,
+          section: section,
+          teacherIds: arrayUnion(user.uid)
+        }, { merge: true });
       }
 
       // Save user data to Firestore
       await setDoc(doc(db, collectionName, user.uid), userData, { merge: true });
-      
+
       toast({
         title: 'Account Created',
         description: 'You have successfully signed up!',
@@ -139,6 +173,7 @@ export default function SignupPage() {
       if (error.code === 'auth/email-already-in-use') {
         description = 'This email address is already in use.';
       }
+      console.error('Error during sign up:', error);
       await deleteUser(user);
       console.log("User deleted");
       toast({
@@ -209,17 +244,77 @@ export default function SignupPage() {
               <FormField
                 control={form.control}
                 name="school"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>School</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., MIT" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const selectedSchool = schools.find((s: any) => s.id === field.value);
+
+                  return (
+                    <FormItem>
+                      <FormLabel>School</FormLabel>
+                      <FormControl>
+                        <Popover open={open} onOpenChange={setOpen}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className="w-full justify-between"
+                            >
+                              {schoolform ? schoolform.name : "Select school"}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+
+                          <PopoverContent className="w-full p-0">
+                            <Command>
+                              <CommandInput
+                                placeholder="Search schools..."
+                                value={schoolform?.name}
+                                onValueChange={(value) =>
+                                  setSchoolform((prev:any) => ({ ...prev, name: value.toUpperCase() }))
+                                }
+                              />
+                              <CommandList>
+                                <CommandEmpty className="flex flex-col items-center justify-center p-4 space-y-2">
+                                  <span>No school found.</span>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={async () => {
+                                      setOpen(false);
+                                      const docRef = await addDoc(collection(db, "schools"), {
+                                        name: schoolform?.name,
+                                      });
+                                      setSchoolform({ name: schoolform!.name, id: docRef.id });
+                                    }}
+                                  >
+                                    + Add School
+                                  </Button>
+                                </CommandEmpty>
+
+                                <CommandGroup>
+                                  {schools.map((s: any) => (
+                                    <CommandItem
+                                      key={s.id}
+                                      onSelect={() => {
+                                        setSchoolform({ name: s.name, id: s.id });
+                                        setOpen(false);
+                                        field.onChange(s);
+                                      }}
+                                    >
+                                      {s.name}
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
-              
+
               {(selectedRole === 'student' || selectedRole === 'teacher') && (
                 <>
                   <div className="grid grid-cols-3 gap-4">
@@ -267,7 +362,7 @@ export default function SignupPage() {
                   </div>
                 </>
               )}
-              
+
               <FormField
                 control={form.control}
                 name="email"
@@ -295,7 +390,7 @@ export default function SignupPage() {
                   </FormItem>
                 )}
               />
-              
+
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? <LoadingSpinner className="mr-2" /> : null}
                 Sign Up

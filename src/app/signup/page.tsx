@@ -8,8 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { auth, db } from '@/lib/firebase';
+import { doc, setDoc, updateDoc, arrayUnion, collection, query, where, getDocs } from 'firebase/firestore';import { auth, db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -23,10 +22,7 @@ const signupSchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters.'),
     email: z.string().email('Invalid email address.'),
     password: z.string().min(6, 'Password must be at least 6 characters.'),
-    class: z.coerce.number({ invalid_type_error: "Grade must be a number." })
-    .min(1, { message: "Grade must be 1 or higher." })
-    .max(12, { message: "Grade must be 12 or lower." })
-    .optional(),
+    class: z.coerce.string().optional(),
     section: z.string().optional(),
     rollNumber: z.string().optional(),
   }).superRefine((data, ctx) => {
@@ -71,6 +67,23 @@ export default function SignupPage() {
   async function onSubmit(values: SignupFormValues) {
     setIsLoading(true);
     try {
+      if (!db) {
+        toast({
+          variant: 'destructive',
+          title: 'Configuration Error',
+          description: 'Database connection not available',
+        });
+        return;
+      }
+      if (!auth) {
+        toast({
+          variant: 'destructive',
+          title: 'Configuration Error',
+          description: 'Authentication service not available',
+        });
+        return;
+      }
+
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
 
@@ -101,6 +114,25 @@ export default function SignupPage() {
               studentIds: arrayUnion(user.uid)
           }, { merge: true });
       } else if (values.role === 'teacher') {
+          const teachersRef = collection(db, 'teachers');
+          const existingTeacherQuery = query(
+            teachersRef,
+            where('class', '==', values.class),
+            where('section', '==', values.section?.toUpperCase())
+          );
+          
+          const existingSnapshot = await getDocs(existingTeacherQuery);
+          
+          if (!existingSnapshot.empty) {
+            const existingTeacher = existingSnapshot.docs[0].data();
+            toast({
+              variant: 'destructive',
+              title: 'Class Already Assigned',
+              description: `Already a teacher is assigned to class ${values.class}-${values.section}. Please choose a different class-section.`,
+            });
+            setIsLoading(false);
+            return;
+          }
           const grade = values.class!;
           const section = values.section!.toUpperCase();
           const classroomId = `${grade}-${section}`.toUpperCase();

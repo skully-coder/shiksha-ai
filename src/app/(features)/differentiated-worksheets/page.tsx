@@ -152,7 +152,7 @@ export default function DifferentiatedWorksheetsPage() {
         worksheetId: worksheetRef.id,
         gradeLevel: selectedWorksheet.gradeLevel,
       };
-      await addDoc(collection(db!, 'classrooms', selectedClassroom, 'posts'), postData);
+      await addDoc(collection(db!, 'schools', profile.school!.id, 'classrooms', selectedClassroom, 'posts'), postData);
       
       const classroom = classrooms.find(c => c.id === selectedClassroom);
       toast({ title: t('success'), description: t('worksheetShared', { grade: classroom?.grade, section: classroom?.section }) });

@@ -41,7 +41,7 @@ export default function ClassroomsPage() {
       const fdb = db!;
       try {
         if (profile?.role === 'teacher' && user) {
-          const allSnap = await getDocs(collection(fdb, 'classrooms'));
+          const allSnap = await getDocs(collection(fdb,'schools', profile.school!.id, 'classrooms'));
           if (isMounted) {
             const rooms = allSnap.docs.map(d => ({ id: d.id, ...d.data() } as Classroom));
             setClassrooms(rooms);
@@ -57,7 +57,7 @@ export default function ClassroomsPage() {
           }
         } else if (profile?.role === 'student') {
           if ((profile as any).classroomId) {
-            const c = await getDoc(doc(fdb, 'classrooms', (profile as any).classroomId));
+            const c = await getDoc(doc(fdb, 'schools', profile.school!.id, 'classrooms', (profile as any).classroomId));
             if (isMounted) setClassrooms(c.exists() ? [{ id: c.id, ...c.data() } as Classroom] : []);
           } else if (isMounted){
             setClassrooms([]);
@@ -86,7 +86,7 @@ export default function ClassroomsPage() {
   const handleJoinLeave = async (classroomId: string, isJoined: boolean) => {
     if (!user || !db || profile?.role !== 'teacher') return;
 
-    const classroomRef = doc(db, 'classrooms', classroomId);
+    const classroomRef = doc(db, 'schools', profile.school!.id, 'classrooms', classroomId);
     const teacherRef = doc(db, 'teachers', user.uid);
 
     try {

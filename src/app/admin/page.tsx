@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/alert-dialog"
 
 const studentGenerationSchema = z.object({
+  school: z.string().min(1, 'School is required.'),
   grade: z.string().min(1, 'Grade is required.'),
   section: z.string().min(1, 'Section is required.'),
   count: z.coerce.number().min(1, 'Must generate at least 1 student.').max(100, 'Cannot generate more than 100 students at a time.'),
@@ -106,10 +107,11 @@ export default function AdminPage() {
     const updateLog = (message: string) => setLog(prev => [...prev, message]);
 
     try {
+        const school = values.school;
         const grade = values.grade;
         const section = values.section.toUpperCase();
         
-        updateLog(`Querying for existing students in Grade ${grade} Section ${section}...`);
+        updateLog(`Querying for existing students in Grade ${grade} Section ${section} of ${school}...`);
         const studentsQuery = query(collection(db, 'students'), where('class', '==', grade), where('section', '==', section));
         const querySnapshot = await getDocs(studentsQuery);
 
@@ -147,6 +149,7 @@ export default function AdminPage() {
                     uid: user.uid,
                     email,
                     name,
+                    school: school,
                     role: 'student',
                     class: grade,
                     section: section,
@@ -159,8 +162,9 @@ export default function AdminPage() {
                 await setDoc(studentDocRef, studentData);
                 
                 // Add student to classroom
-                const classroomRef = doc(db, 'classrooms', classroomId);
+                const classroomRef = doc(db, 'schools', school, 'classrooms', classroomId);
                 await setDoc(classroomRef, {
+                    school: school,
                     grade: grade,
                     section: section,
                     studentIds: arrayUnion(user.uid)
@@ -451,6 +455,13 @@ export default function AdminPage() {
                         <Form {...studentForm}>
                         <form onSubmit={studentForm.handleSubmit(onStudentSubmit)} className="space-y-6">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <FormField control={studentForm.control} name="school" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>School</FormLabel>
+                                        <FormControl><Input placeholder="e.g., 5" {...field} disabled={isGenerating || isDeleting} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}/>
                                 <FormField control={studentForm.control} name="grade" render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Grade</FormLabel>

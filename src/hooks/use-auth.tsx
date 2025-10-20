@@ -11,6 +11,7 @@ interface UserProfile {
     name: string;
     email: string;
     role: 'teacher' | 'student';
+    school?: {name: string; id: string};
     class?: string;
     section?: string;
     rollNumber?: string;
@@ -106,7 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               if (teacherSnap.exists()) {
                 const teacherData = teacherSnap.data();
                 if (teacherData.classroomIds && teacherData.classroomIds.length > 0) {
-                  const classroomPromises = teacherData.classroomIds.map((id: string) => getDoc(doc(db!, 'classrooms', id)));
+                  const classroomPromises = teacherData.classroomIds.map((id: string) => getDoc(doc(db!,'schools', teacherData.school!.id, 'classrooms', id)));
                   const classroomDocs = await Promise.all(classroomPromises);
                   const classroomsData = classroomDocs
                     .filter(d => d.exists())

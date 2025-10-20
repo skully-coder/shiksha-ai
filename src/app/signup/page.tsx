@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { createUserWithEmailAndPassword, deleteUser } from 'firebase/auth';
-import { doc, setDoc, updateDoc, arrayUnion, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { doc, setDoc, arrayUnion, collection, query, where, getDocs, addDoc, limit } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,33 +33,33 @@ import { LoadingSpinner } from '@/components/loading-spinner';
 import { ChevronsUpDown } from "lucide-react";
 
 const signupSchema = z.object({
-    role: z.enum(['teacher', 'student']),
-    name: z.string().min(2, 'Name must be at least 2 characters.'),
-    email: z.string().email('Invalid email address.'),
-    password: z.string().min(6, 'Password must be at least 6 characters.'),
-    school: z.object({
+  role: z.enum(['teacher', 'student']),
+  name: z.string().min(2, 'Name must be at least 2 characters.'),
+  email: z.string().email('Invalid email address.'),
+  password: z.string().min(6, 'Password must be at least 6 characters.'),
+  school: z.object({
     name: z.string().min(2, "School name must be at least 2 characters."),
-    id: z.string(),
+    id: z.string().optional(),
   }),
-    class: z.string().optional(),
-    section: z.string().optional(),
-    rollNumber: z.string().optional(),
-  }).superRefine((data, ctx) => {
-    const needsClassSection = data.role === 'student' || data.role === 'teacher';
-    if (needsClassSection) {
-      if (!data.class) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Class is required.', path: ['class'] });
-      }
-      if (!data.section) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Section is required.', path: ['section'] });
-      }
+  class: z.string().optional(),
+  section: z.string().optional(),
+  rollNumber: z.string().optional(),
+}).superRefine((data, ctx) => {
+  const needsClassSection = data.role === 'student' || data.role === 'teacher';
+  if (needsClassSection) {
+    if (!data.class) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Class is required.', path: ['class'] });
     }
-    if (data.role === 'student') {
-      if (!data.rollNumber) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Roll number is required.', path: ['rollNumber'] });
-      }
+    if (!data.section) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Section is required.', path: ['section'] });
     }
-  });
+  }
+  if (data.role === 'student') {
+    if (!data.rollNumber) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Roll number is required.', path: ['rollNumber'] });
+    }
+  }
+});
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 type SchoolForm = z.infer<typeof signupSchema>["school"];
@@ -69,20 +69,59 @@ export default function SignupPage() {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [schoolsLoading, setSchoolsLoading] = useState(false);
   const [schools, setSchools] = useState<any>([]);
-  const [schoolform, setSchoolform] = useState<SchoolForm>({ name: "", id: "" });
+  const [schoolform, setSchoolform] = useState<SchoolForm>({ name: '', id: '' });
 
-  useEffect(() => {
-    const fetchSchools = async () => {
-      const snapshot = await getDocs(collection(db!, "schools"));
-      const list = snapshot.docs.map((doc) => ({
+  function debounce<T extends (...args: any[]) => void>(fn: T, wait = 300) {
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+    return (...args: Parameters<T>) => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout(() => {
+        fn(...args);
+      }, wait);
+    };
+  }
+
+  // Debounced search function
+  const fetchSchools = debounce(async (text) => {
+    if (!text.trim()) {
+      const q = query(
+        collection(db!, "schools"),
+        limit(5)
+      );
+      const snap = await getDocs(q);
+      const results = snap.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setSchools(list);
-    };
-    fetchSchools();
-  }, []);
+
+      setSchools(results);
+    }
+
+    setSchoolsLoading(true);
+    const q = query(
+      collection(db!, "schools"),
+      where("name", ">=", text),
+      where("name", "<=", text + "\uf8ff"),
+      limit(5)
+    );
+
+    const snap = await getDocs(q);
+    const results = snap.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    setSchools(results);
+    setSchoolsLoading(false);
+  }, 300);
+
+  useEffect(() => {
+    fetchSchools(schoolform.name);
+  }, [schoolform.name]);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -91,7 +130,7 @@ export default function SignupPage() {
       name: '',
       email: '',
       password: '',
-      school: {name: '', id: ''},
+      school: { name: '', id: '' },
       class: '',
       section: '',
       rollNumber: '',
@@ -101,6 +140,7 @@ export default function SignupPage() {
   const selectedRole = form.watch('role');
 
   async function onSubmit(values: SignupFormValues) {
+    console.log('Form Values:', values);
     setIsLoading(true);
     let user: any = null;
     try {
@@ -130,7 +170,7 @@ export default function SignupPage() {
         email: values.email,
         name: values.name,
         role: values.role,
-        school: schoolform,
+        school: values.school,
       };
 
       const collectionName = values.role === 'teacher' ? 'teachers' : 'students';
@@ -145,9 +185,9 @@ export default function SignupPage() {
         userData.classroomId = classroomId;
 
         // Add student to classroom
-        const classroomRef = doc(db, 'schools', schoolform.id, 'classrooms', classroomId);
+        const classroomRef = doc(db, 'schools', schoolform.id!, 'classrooms', classroomId);
         await setDoc(classroomRef, {
-          school:{
+          school: {
             name: schoolform.name,
             id: schoolform.id
           },
@@ -156,40 +196,45 @@ export default function SignupPage() {
           studentIds: arrayUnion(user.uid)
         }, { merge: true });
       } else if (values.role === 'teacher') {
-          const teachersRef = collection(db, 'teachers');
-          const existingTeacherQuery = query(
-            teachersRef,
-            where('class', '==', values.class),
-            where('section', '==', values.section?.toUpperCase())
-          );
-          
-          const existingSnapshot = await getDocs(existingTeacherQuery);
-          
-          if (!existingSnapshot.empty) {
-            const existingTeacher = existingSnapshot.docs[0].data();
-            toast({
-              variant: 'destructive',
-              title: 'Class Already Assigned',
-              description: `Already a teacher is assigned to class ${values.class}-${values.section}. Please choose a different class-section.`,
-            });
-            setIsLoading(false);
-            return;
-          }
-          const grade = values.class!;
-          const section = values.section!.toUpperCase();
-          const classroomId = `${grade}-${section}`.toUpperCase();
-          // Persist teacher's classroom membership
-          userData.class = grade;
-          userData.section = section;
-          userData.classroomIds = arrayUnion(classroomId);
+        const teachersRef = collection(db, 'teachers');
+        const existingTeacherQuery = query(
+          teachersRef,
+          where('school.id', '==', schoolform.id),
+          where('class', '==', values.class),
+          where('section', '==', values.section?.toUpperCase())
+        );
 
-          // Upsert classroom and add teacher
-          const classroomRef = doc(db, 'classrooms', classroomId);
-          await setDoc(classroomRef, {
-              grade: grade,
-              section: section,
-              teacherIds: arrayUnion(user.uid)
-          }, { merge: true });
+        const existingSnapshot = await getDocs(existingTeacherQuery);
+
+        if (!existingSnapshot.empty) {
+          toast({
+            variant: 'destructive',
+            title: 'Class Already Assigned',
+            description: `Already a teacher is assigned to class ${values.class}-${values.section}. Please choose a different class-section.`,
+          });
+          await deleteUser(user);
+          setIsLoading(false);
+          return;
+        }
+        const grade = values.class!;
+        const section = values.section!.toUpperCase();
+        const classroomId = `${grade}-${section}`.toUpperCase();
+        // Persist teacher's classroom membership
+        userData.class = grade;
+        userData.section = section;
+        userData.classroomIds = arrayUnion(classroomId);
+
+        // Upsert classroom and add teacher
+        const classroomRef = doc(db, 'schools', schoolform.id!, 'classrooms', classroomId);
+        await setDoc(classroomRef, {
+          school: {
+            name: schoolform.name,
+            id: schoolform.id
+          },
+          grade: grade,
+          section: section,
+          teacherIds: arrayUnion(user.uid)
+        }, { merge: true });
       }
 
       // Save user data to Firestore
@@ -207,7 +252,6 @@ export default function SignupPage() {
       }
       console.error('Error during sign up:', error);
       await deleteUser(user);
-      console.log("User deleted");
       toast({
         variant: 'destructive',
         title: 'Sign Up Failed',
@@ -278,7 +322,6 @@ export default function SignupPage() {
                 name="school"
                 render={({ field }) => {
                   const selectedSchool = schools.find((s: any) => s.id === field.value);
-
                   return (
                     <FormItem>
                       <FormLabel>School</FormLabel>
@@ -290,7 +333,7 @@ export default function SignupPage() {
                               role="combobox"
                               className="w-full justify-between"
                             >
-                              {schoolform ? schoolform.name : "Select school"}
+                              {schoolform.name ? schoolform.name : "Select school"}
                               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
                           </PopoverTrigger>
@@ -301,13 +344,13 @@ export default function SignupPage() {
                                 placeholder="Search schools..."
                                 value={schoolform?.name}
                                 onValueChange={(value) =>
-                                  setSchoolform((prev:any) => ({ ...prev, name: value.toUpperCase() }))
+                                  setSchoolform((prev: any) => ({ ...prev, name: value.toUpperCase() }))
                                 }
                               />
                               <CommandList>
                                 <CommandEmpty className="flex flex-col items-center justify-center p-4 space-y-2">
                                   <span>No school found.</span>
-                                  <Button
+                                  {!schoolsLoading ? (<Button
                                     variant="outline"
                                     size="sm"
                                     onClick={async () => {
@@ -315,11 +358,12 @@ export default function SignupPage() {
                                       const docRef = await addDoc(collection(db!, "schools"), {
                                         name: schoolform?.name,
                                       });
-                                      setSchoolform({ name: schoolform!.name, id: docRef.id });
+                                      setSchoolform({ ...schoolform, id: docRef.id });
+                                      field.onChange({ name: schoolform?.name, id: docRef.id });
                                     }}
                                   >
                                     + Add School
-                                  </Button>
+                                  </Button>) : null}
                                 </CommandEmpty>
 
                                 <CommandGroup>
@@ -423,7 +467,7 @@ export default function SignupPage() {
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full" disabled={isLoading} >
                 {isLoading ? <LoadingSpinner className="mr-2" /> : null}
                 Sign Up
               </Button>

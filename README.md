@@ -134,33 +134,10 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/Dhanwantisatone">
-                    <img src="https://avatars.githubusercontent.com/u/191073548?v=4" width="100;" alt="Dhanwantisatone"/>
+                <a href="https://github.com/DCode-v05">
+                    <img src="https://avatars.githubusercontent.com/u/182192643?v=4" width="100;" alt="DCode-v05"/>
                     <br />
-                    <sub><b>Dhanwantisatone</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/Sidratul02">
-                    <img src="https://avatars.githubusercontent.com/u/142794200?v=4" width="100;" alt="Sidratul02"/>
-                    <br />
-                    <sub><b>Sidratul Muntaha</b></sub>
-                </a>
-            </td>
-		</tr>
-		<tr>
-            <td align="center">
-                <a href="https://github.com/Z33xD">
-                    <img src="https://avatars.githubusercontent.com/u/79450902?v=4" width="100;" alt="Z33xD"/>
-                    <br />
-                    <sub><b>Zeeshan</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/its-Pratik-15">
-                    <img src="https://avatars.githubusercontent.com/u/182534401?v=4" width="100;" alt="its-Pratik-15"/>
-                    <br />
-                    <sub><b>Pratik Kumar Pan</b></sub>
+                    <sub><b>Denistan B</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -170,6 +147,43 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                     <sub><b>Poornima Taley</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/its-Pratik-15">
+                    <img src="https://avatars.githubusercontent.com/u/182534401?v=4" width="100;" alt="its-Pratik-15"/>
+                    <br />
+                    <sub><b>Pratik Kumar Pan</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Z33xD">
+                    <img src="https://avatars.githubusercontent.com/u/79450902?v=4" width="100;" alt="Z33xD"/>
+                    <br />
+                    <sub><b>Zeeshan</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Denistanb05">
+                    <img src="https://avatars.githubusercontent.com/u/214665212?v=4" width="100;" alt="Denistanb05"/>
+                    <br />
+                    <sub><b>Denistan B</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Sidratul02">
+                    <img src="https://avatars.githubusercontent.com/u/142794200?v=4" width="100;" alt="Sidratul02"/>
+                    <br />
+                    <sub><b>Sidratul Muntaha</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Dhanwantisatone">
+                    <img src="https://avatars.githubusercontent.com/u/191073548?v=4" width="100;" alt="Dhanwantisatone"/>
+                    <br />
+                    <sub><b>Dhanwantisatone</b></sub>
+                </a>
+            </td>
             <td align="center">
                 <a href="https://github.com/abbasabro">
                     <img src="https://avatars.githubusercontent.com/u/141827555?v=4" width="100;" alt="abbasabro"/>
@@ -177,6 +191,8 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                     <sub><b>Abbas Abro</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
             <td align="center">
                 <a href="https://github.com/Aditya-Bajpayee007">
                     <img src="https://avatars.githubusercontent.com/u/145580411?v=4" width="100;" alt="Aditya-Bajpayee007"/>
@@ -191,8 +207,6 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                     <sub><b>Aryan Verma</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/ImgBotApp">
                     <img src="https://avatars.githubusercontent.com/u/31427850?v=4" width="100;" alt="ImgBotApp"/>
@@ -221,6 +235,8 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                     <sub><b>Pragya</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
             <td align="center">
                 <a href="https://github.com/krisharmaa">
                     <img src="https://avatars.githubusercontent.com/u/195412062?v=4" width="100;" alt="krisharmaa"/>

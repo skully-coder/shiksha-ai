@@ -22,7 +22,10 @@ const signupSchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters.'),
     email: z.string().email('Invalid email address.'),
     password: z.string().min(6, 'Password must be at least 6 characters.'),
-    class: z.string().optional(),
+    class: z.coerce.number({ invalid_type_error: "Grade must be a number." })
+    .min(1, { message: "Grade must be 1 or higher." })
+    .max(12, { message: "Grade must be 12 or lower." })
+    .optional(),
     section: z.string().optional(),
     rollNumber: z.string().optional(),
   }).superRefine((data, ctx) => {

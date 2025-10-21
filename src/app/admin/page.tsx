@@ -20,6 +20,7 @@ import { LoadingSpinner } from '@/components/loading-spinner';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal, Users, UserPlus, ArrowLeft, Trash2 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { ThemeSwitcher } from '@/components/theme-switcher';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -448,6 +449,7 @@ export default function AdminPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
+        <ThemeSwitcher />
         <header className="flex items-center justify-between p-4 border-b">
             <h1 className="font-headline text-xl font-bold text-primary">Admin Panel</h1>
              <Link href="/login" passHref>

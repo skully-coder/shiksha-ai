@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, Users, Lightbulb, Globe, Clock, Target, Heart, Zap } from 'lucide-react';
+import { ThemeSwitcher } from '@/components/theme-switcher';
 
 export default function Home() {
   return (

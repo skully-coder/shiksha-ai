@@ -57,6 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (auth && db) {
+      
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
         setUser(user);
         if (user && db) {
@@ -64,14 +65,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           let userProfile: UserProfile | null = null;
           try {
             // Try fetching from 'teachers' collection first
-            let docRef = doc(db, 'teachers', user.uid);
+            let docRef = doc(db!, 'teachers', user.uid);
             let docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
                 userProfile = docSnap.data() as UserProfile;
             } else {
                 // If not found, try 'students' collection
-                docRef = doc(db, 'students', user.uid);
+                docRef = doc(db!, 'students', user.uid);
                 docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {

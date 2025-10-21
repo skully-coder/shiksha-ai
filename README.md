@@ -34,19 +34,29 @@ Teachers in developing regions often face challenges such as:
 | **Styling** | ShadCN UI, Tailwind CSS |
 | **Backend** | Firebase |
 | **AI Integration** | Genkit with Google Gemini Models |
+| **Theme Management** | next-themes |
 
 Built for **scalability**, **ease of use**, and **performance**.
 
 ---
 
-##  Impact
+## 🌙 Theme Switcher
+
+Shiksha AI includes a **dynamic theme switcher** that enhances user experience by providing both light and dark mode options.
+
+**Workflow**: Click theme button → Instant toggle → Auto-saved preference → Applied across all pages
+
+---
+
+## 🌍 Impact
 
 Shiksha AI contributes to a more equitable education ecosystem by:
 
 - 💪 Boosting teacher efficiency and creativity  
 - 🧾 Providing personalized lesson plans and materials  
 - 🌐 Bridging the digital divide in low-connectivity regions  
-- 👩‍🏫 Allowing teachers to focus more on student interaction
+- 👩‍🏫 Allowing teachers to focus more on student interaction  
+- 🌙 Offering comfortable viewing experience in any lighting condition
 
 ---
 
@@ -133,33 +143,10 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/Dhanwantisatone">
-                    <img src="https://avatars.githubusercontent.com/u/191073548?v=4" width="100;" alt="Dhanwantisatone"/>
+                <a href="https://github.com/DCode-v05">
+                    <img src="https://avatars.githubusercontent.com/u/182192643?v=4" width="100;" alt="DCode-v05"/>
                     <br />
-                    <sub><b>Dhanwantisatone</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/Sidratul02">
-                    <img src="https://avatars.githubusercontent.com/u/142794200?v=4" width="100;" alt="Sidratul02"/>
-                    <br />
-                    <sub><b>Sidratul Muntaha</b></sub>
-                </a>
-            </td>
-		</tr>
-		<tr>
-            <td align="center">
-                <a href="https://github.com/Z33xD">
-                    <img src="https://avatars.githubusercontent.com/u/79450902?v=4" width="100;" alt="Z33xD"/>
-                    <br />
-                    <sub><b>Zeeshan</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/its-Pratik-15">
-                    <img src="https://avatars.githubusercontent.com/u/182534401?v=4" width="100;" alt="its-Pratik-15"/>
-                    <br />
-                    <sub><b>Pratik Kumar Pan</b></sub>
+                    <sub><b>Denistan B</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -169,6 +156,43 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                     <sub><b>Poornima Taley</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/its-Pratik-15">
+                    <img src="https://avatars.githubusercontent.com/u/182534401?v=4" width="100;" alt="its-Pratik-15"/>
+                    <br />
+                    <sub><b>Pratik Kumar Pan</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Z33xD">
+                    <img src="https://avatars.githubusercontent.com/u/79450902?v=4" width="100;" alt="Z33xD"/>
+                    <br />
+                    <sub><b>Zeeshan</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Denistanb05">
+                    <img src="https://avatars.githubusercontent.com/u/214665212?v=4" width="100;" alt="Denistanb05"/>
+                    <br />
+                    <sub><b>Denistan B</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Sidratul02">
+                    <img src="https://avatars.githubusercontent.com/u/142794200?v=4" width="100;" alt="Sidratul02"/>
+                    <br />
+                    <sub><b>Sidratul Muntaha</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Dhanwantisatone">
+                    <img src="https://avatars.githubusercontent.com/u/191073548?v=4" width="100;" alt="Dhanwantisatone"/>
+                    <br />
+                    <sub><b>Dhanwantisatone</b></sub>
+                </a>
+            </td>
             <td align="center">
                 <a href="https://github.com/abbasabro">
                     <img src="https://avatars.githubusercontent.com/u/141827555?v=4" width="100;" alt="abbasabro"/>
@@ -176,6 +200,8 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                     <sub><b>Abbas Abro</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
             <td align="center">
                 <a href="https://github.com/Aditya-Bajpayee007">
                     <img src="https://avatars.githubusercontent.com/u/145580411?v=4" width="100;" alt="Aditya-Bajpayee007"/>
@@ -190,8 +216,6 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                     <sub><b>Aryan Verma</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/ImgBotApp">
                     <img src="https://avatars.githubusercontent.com/u/31427850?v=4" width="100;" alt="ImgBotApp"/>
@@ -218,6 +242,15 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                     <img src="https://avatars.githubusercontent.com/u/135381931?v=4" width="100;" alt="pragya1204"/>
                     <br />
                     <sub><b>Pragya</b></sub>
+                </a>
+            </td>
+		</tr>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/krisharmaa">
+                    <img src="https://avatars.githubusercontent.com/u/195412062?v=4" width="100;" alt="krisharmaa"/>
+                    <br />
+                    <sub><b>Krish Sharma</b></sub>
                 </a>
             </td>
 		</tr>

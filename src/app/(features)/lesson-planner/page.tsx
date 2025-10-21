@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -28,7 +27,7 @@ import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import FeaturePageSkeleton from "@/components/skeletons/FeaturePageSkeleton";
-
+import { useTranslation } from 'react-i18next';
 
 const lessonPlannerSchema = z.object({
   subject: z.string().min(1, 'Subject is required'),
@@ -42,6 +41,7 @@ const lessonPlannerSchema = z.object({
 type LessonPlannerFormValues = z.infer<typeof lessonPlannerSchema>;
 
 export default function LessonPlannerPage() {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [isPdfLoading, setIsPdfLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -82,8 +82,8 @@ export default function LessonPlannerPage() {
     if (!user || !db) {
       toast({
         variant: "destructive",
-        title: "Authentication Error",
-        description: "You must be signed in to generate a lesson plan."
+        title: t("Authentication Error"),
+        description: t("You must be signed in to generate a lesson plan.")
       });
       return;
     }
@@ -98,8 +98,8 @@ export default function LessonPlannerPage() {
       console.error('Error generating lesson plan:', error);
       toast({
         variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to generate lesson plan. Please try again.',
+        title: t('Error'),
+        description: t('Failed to generate lesson plan. Please try again.'),
       });
     } finally {
       setIsLoading(false);
@@ -113,8 +113,8 @@ export default function LessonPlannerPage() {
     if (!topic || !gradeLevel) {
       toast({
         variant: 'destructive',
-        title: 'Missing Information',
-        description: 'Please enter a Topic and Grade Level first.',
+        title: t('Missing Information'),
+        description: t('Please enter a Topic and Grade Level first.'),
       });
       return;
     }
@@ -129,8 +129,8 @@ export default function LessonPlannerPage() {
       console.error('Error generating learning objectives:', error);
       toast({
         variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to generate learning objectives. Please try again.',
+        title: t('Error'),
+        description: t('Failed to generate learning objectives. Please try again.'),
       });
     } finally {
       setIsGeneratingObjectives(false);
@@ -141,7 +141,7 @@ export default function LessonPlannerPage() {
   const handleSaveEdit = () => {
     setLessonPlan(editedLessonPlan);
     setIsEditing(false);
-    toast({ title: "Success", description: "Lesson plan updated." });
+    toast({ title: t("Success"), description: t("Lesson plan updated.") });
   }
 
   const handleExportToPdf = () => {
@@ -149,8 +149,8 @@ export default function LessonPlannerPage() {
     if (!input) {
       toast({
         variant: 'destructive',
-        title: 'Error',
-        description: 'Could not find the lesson plan content to export.',
+        title: t('Error'),
+        description: t('Could not find the lesson plan content to export.'),
       });
       return;
     }
@@ -187,8 +187,8 @@ export default function LessonPlannerPage() {
         console.error('Error generating PDF:', error);
         toast({
           variant: 'destructive',
-          title: 'Error',
-          description: 'Failed to export lesson plan as PDF. Please try again.',
+          title: t('Error'),
+          description: t('Failed to export lesson plan as PDF. Please try again.'),
         });
       })
       .finally(() => {
@@ -200,8 +200,8 @@ export default function LessonPlannerPage() {
     if (!user || !profile || !selectedClassroom || !lessonPlan) {
       toast({
         variant: "destructive",
-        title: "Sharing Error",
-        description: "Missing user, classroom, or lesson plan information."
+        title: t("Sharing Error"),
+        description: t("Missing user, classroom, or lesson plan information.")
       });
       return;
     }
@@ -217,7 +217,7 @@ export default function LessonPlannerPage() {
         gradeLevel: form.getValues('gradeLevel'),
         weeklyPlan: lessonPlan,
       };
-      const lessonPlanRef = await addDoc(collection(db, 'lessonPlans'), lessonPlanData);
+      const lessonPlanRef = await addDoc(collection(db!, 'lessonPlans'), lessonPlanData);
 
       const postData = {
         authorId: user.uid,
@@ -235,8 +235,8 @@ export default function LessonPlannerPage() {
       
       const classroom = classrooms.find(c => c.id === selectedClassroom);
       toast({
-        title: 'Success',
-        description: `Lesson plan shared with Grade ${classroom?.grade} - Section ${classroom?.section}.`,
+        title: t('Success'),
+        description: t(`Lesson plan shared with Grade ${classroom?.grade} - Section ${classroom?.section}.`),
       });
       setIsShareDialogOpen(false);
       setSelectedClassroom('');
@@ -245,8 +245,8 @@ export default function LessonPlannerPage() {
       console.error("Error sharing lesson plan:", error);
       toast({
         variant: 'destructive',
-        title: 'Error',
-        description: 'Could not share the lesson plan. Please try again.',
+        title: t('Error'),
+        description: t('Could not share the lesson plan. Please try again.'),
       });
     } finally {
       setIsSharing(false);
@@ -261,7 +261,7 @@ export default function LessonPlannerPage() {
     <div className="flex flex-col h-full">
        <header className="flex items-center justify-between p-4 border-b md:hidden gap-4">
             <div className="flex-1 min-w-0">
-                <h1 className="font-headline text-xl font-bold text-primary truncate">Lesson Planner</h1>
+                <h1 className="font-headline text-xl font-bold text-primary truncate">{t('Lesson Planner')}</h1>
             </div>
             <SidebarTrigger className="flex-shrink-0" />
         </header>
@@ -270,8 +270,8 @@ export default function LessonPlannerPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-8 items-start">
               <Card className="lg:col-span-1">
                   <CardHeader className="p-4 md:p-6">
-                  <CardTitle className="font-headline text-2xl">AI Lesson Planner</CardTitle>
-                  <CardDescription>Generate a detailed weekly lesson plan for your class.</CardDescription>
+                  <CardTitle className="font-headline text-2xl">{t('AI Lesson Planner')}</CardTitle>
+                  <CardDescription>{t('Generate a detailed weekly lesson plan for your class.')}</CardDescription>
                   </CardHeader>
                   <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
                   <Form {...form}>
@@ -282,9 +282,9 @@ export default function LessonPlannerPage() {
                           name="subject"
                           render={({ field }) => (
                               <FormItem>
-                              <FormLabel>Subject</FormLabel>
+                              <FormLabel>{t('Subject')}</FormLabel>
                               <FormControl>
-                                  <Input placeholder="e.g., Science" {...field} />
+                                  <Input placeholder={t('e.g., Science')} {...field} />
                               </FormControl>
                               <FormMessage />
                               </FormItem>
@@ -295,9 +295,9 @@ export default function LessonPlannerPage() {
                           name="topic"
                           render={({ field }) => (
                               <FormItem>
-                              <FormLabel>Topic</FormLabel>
+                              <FormLabel>{t('Topic')}</FormLabel>
                               <FormControl>
-                                  <Input placeholder="e.g., The Water Cycle" {...field} />
+                                  <Input placeholder={t('e.g., The Water Cycle')} {...field} />
                               </FormControl>
                               <FormMessage />
                               </FormItem>
@@ -308,9 +308,9 @@ export default function LessonPlannerPage() {
                           name="gradeLevel"
                           render={({ field }) => (
                               <FormItem>
-                              <FormLabel>Grade Level</FormLabel>
+                              <FormLabel>{t('Grade Level')}</FormLabel>
                               <FormControl>
-                                  <Input placeholder="e.g., 4th Grade" {...field} />
+                                  <Input placeholder={t('e.g., 4th Grade')} {...field} />
                               </FormControl>
                               <FormMessage />
                               </FormItem>
@@ -321,19 +321,19 @@ export default function LessonPlannerPage() {
                           name="localLanguage"
                           render={({ field }) => (
                               <FormItem>
-                              <FormLabel>Language</FormLabel>
+                              <FormLabel>{t('Language')}</FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                   <FormControl>
                                   <SelectTrigger>
-                                      <SelectValue placeholder="Select a language" />
+                                      <SelectValue placeholder={t('Select a language')} />
                                   </SelectTrigger>
                                   </FormControl>
                                   <SelectContent>
-                                  <SelectItem value="English">English</SelectItem>
-                                  <SelectItem value="Hindi">Hindi</SelectItem>
-                                  <SelectItem value="Marathi">Marathi</SelectItem>
-                                  <SelectItem value="Bengali">Bengali</SelectItem>
-                                  <SelectItem value="Tamil">Tamil</SelectItem>
+                                  <SelectItem value="English">{t('English')}</SelectItem>
+                                  <SelectItem value="Hindi">{t('Hindi')}</SelectItem>
+                                  <SelectItem value="Marathi">{t('Marathi')}</SelectItem>
+                                  <SelectItem value="Bengali">{t('Bengali')}</SelectItem>
+                                  <SelectItem value="Tamil">{t('Tamil')}</SelectItem>
                                   </SelectContent>
                               </Select>
                               <FormMessage />
@@ -347,7 +347,7 @@ export default function LessonPlannerPage() {
                           render={({ field }) => (
                           <FormItem>
                               <div className="flex items-center justify-between">
-                                <FormLabel>Learning Objectives</FormLabel>
+                                <FormLabel>{t('Learning Objectives')}</FormLabel>
                                 <Button 
                                   type="button" 
                                   variant="ghost" 
@@ -356,13 +356,13 @@ export default function LessonPlannerPage() {
                                   disabled={!topicValue || isGeneratingObjectives}
                                 >
                                   {isGeneratingObjectives ? <LoadingSpinner className="h-4 w-4 mr-2" /> : <Sparkles className="h-4 w-4 mr-2" />}
-                                  Generate with AI
+                                  {t('Generate with AI')}
                                 </Button>
                               </div>
                               <FormControl>
-                              <Textarea placeholder="e.g., Students will be able to describe the stages of the water cycle." {...field} />
+                              <Textarea placeholder={t('e.g., Students will be able to describe the stages of the water cycle.')} {...field} />
                               </FormControl>
-                               {!topicValue && <p className="text-xs text-muted-foreground">Please enter a Topic and Grade Level to generate objectives.</p>}
+                               {!topicValue && <p className="text-xs text-muted-foreground">{t('Please enter a Topic and Grade Level to generate objectives.')}</p>}
                               <FormMessage />
                           </FormItem>
                           )}
@@ -372,9 +372,9 @@ export default function LessonPlannerPage() {
                           name="additionalDetails"
                           render={({ field }) => (
                           <FormItem>
-                              <FormLabel>Additional Details (Optional)</FormLabel>
+                              <FormLabel>{t('Additional Details (Optional)')}</FormLabel>
                               <FormControl>
-                              <Textarea placeholder="e.g., Focus on local examples of water sources." {...field} />
+                              <Textarea placeholder={t('e.g., Focus on local examples of water sources.')} {...field} />
                               </FormControl>
                               <FormMessage />
                           </FormItem>
@@ -382,7 +382,7 @@ export default function LessonPlannerPage() {
                       />
                       <Button type="submit" disabled={isLoading}>
                           {isLoading ? <LoadingSpinner className="mr-2 h-4 w-4" /> : null}
-                          Generate Plan
+                          {t('Generate Plan')}
                       </Button>
                       </form>
                   </Form>
@@ -413,18 +413,19 @@ export default function LessonPlannerPage() {
                         <Card className="w-full bg-secondary/50 max-h-[calc(100vh-8rem)] overflow-y-auto">
                             <CardHeader className="p-4 md:p-6">
                                 <div className="flex justify-between items-center">
-                                    <CardTitle className="font-headline text-xl">Your Weekly Lesson Plan</CardTitle>
+                                    <CardTitle className="font-headline text-xl">{t('Your Weekly Lesson Plan')}</CardTitle>
                                     <div className="flex items-center gap-1">
                                     {isEditing ? (
                                         <>
                                             <Button variant="default" size="sm" onClick={handleSaveEdit}>
-                                                Save
+                                                {t('Save')}
                                             </Button>
-                                            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>Cancel</Button>
+                                            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>{t('Cancel')}</Button>
                                         </>
                                     ) : (
                                         <>
-                                            <Button variant="ghost" size="icon" onClick={() => { setIsEditing(true); setEditedLessonPlan(lessonPlan); }} aria-label="Edit Plan" title="Edit Plan">
+
+                                            <Button variant="ghost" size="icon" onClick={() => { setIsEditing(true); setEditedLessonPlan(lessonPlan); }} aria-label={t('Edit Plan')} title={t('Edit Plan')}>
                                                 <Edit className="h-5 w-5" />
                                             </Button>
                                             <Button
@@ -432,8 +433,8 @@ export default function LessonPlannerPage() {
                                                 size="icon"
                                                 onClick={handleExportToPdf}
                                                 disabled={isPdfLoading}
-                                                aria-label="Export to PDF"
-                                                title="Export to PDF"
+                                                aria-label={t('Export to PDF')}
+                                                title={t('Export to PDF')}
                                             >
                                                 {isPdfLoading ? <LoadingSpinner className="h-5 w-5"/> : <Download className="h-5 w-5" />}
                                             </Button>
@@ -444,39 +445,39 @@ export default function LessonPlannerPage() {
                                                         variant="ghost" 
                                                         size="icon" 
                                                         disabled={!lessonPlan || classrooms.length === 0} 
-                                                        aria-label="Share to classroom" 
-                                                        title="Share to classroom"
+                                                        aria-label={t('Share to classroom')} 
+                                                        title={t('Share to classroom')}
                                                     >
                                                         <Share2 className="h-5 w-5" />
                                                     </Button>
                                                 </DialogTrigger>
                                                 <DialogContent>
                                                     <DialogHeader>
-                                                        <DialogTitle>Share Lesson Plan</DialogTitle>
+                                                        <DialogTitle>{t('Share Lesson Plan')}</DialogTitle>
                                                         <DialogDescription>
-                                                            Select a classroom to post this lesson plan to their feed.
-                                                            {classrooms.length === 0 && <span className="text-destructive block mt-2">You have not joined any classrooms.</span>}
+                                                            {t('Select a classroom to post this lesson plan to their feed.')}
+                                                            {classrooms.length === 0 && <span className="text-destructive block mt-2">{t('You have not joined any classrooms.')}</span>}
                                                         </DialogDescription>
                                                     </DialogHeader>
                                                     <div className="py-4">
                                                         <Select onValueChange={setSelectedClassroom} defaultValue={selectedClassroom}>
                                                             <SelectTrigger>
-                                                                <SelectValue placeholder="Select a classroom..." />
+                                                                <SelectValue placeholder={t('Select a classroom...')} />
                                                             </SelectTrigger>
                                                             <SelectContent>
                                                                 {classrooms.map(c => (
                                                                     <SelectItem key={c.id} value={c.id}>
-                                                                        Grade {c.grade} - Section {c.section}
+                                                                        {t(`Grade ${c.grade} - Section ${c.section}`)}
                                                                     </SelectItem>
                                                                 ))}
                                                             </SelectContent>
                                                         </Select>
                                                     </div>
                                                     <DialogFooter>
-                                                        <Button variant="outline" onClick={() => setIsShareDialogOpen(false)}>Cancel</Button>
+                                                        <Button variant="outline" onClick={() => setIsShareDialogOpen(false)}>{t('Cancel')}</Button>
                                                         <Button onClick={handleShare} disabled={!selectedClassroom || isSharing}>
                                                             {isSharing && <LoadingSpinner className="mr-2 h-4 w-4" />}
-                                                            Share
+                                                            {t('Share')}
                                                         </Button>
                                                     </DialogFooter>
                                                 </DialogContent>
@@ -507,8 +508,8 @@ export default function LessonPlannerPage() {
                       <Card className="flex items-center justify-center h-96 border-dashed bg-secondary/20">
                           <CardContent className="text-center text-muted-foreground p-6">
                               <BookText className="mx-auto h-12 w-12" />
-                              <p className="mt-4 font-medium">Your generated lesson plan will appear here.</p>
-                              <p className="text-sm">Fill out the form to the left to get started.</p>
+                              <p className="mt-4 font-medium">{t('Your generated lesson plan will appear here.')}</p>
+                              <p className="text-sm">{t('Fill out the form to the left to get started.')}</p>
                           </CardContent>
                       </Card>
                   )}
@@ -519,5 +520,3 @@ export default function LessonPlannerPage() {
     </div>
   );
 }
-
-    

@@ -1,7 +1,7 @@
 
 import { initializeApp, getApp, getApps, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
-import { getFirestore, type Firestore } from 'firebase/firestore';
+import { getFirestore, initializeFirestore, type Firestore } from 'firebase/firestore';
 import { getStorage, type FirebaseStorage } from 'firebase/storage';
 
 export const firebaseConfig = {
@@ -21,10 +21,15 @@ let db: Firestore | null = null;
 let storage: FirebaseStorage | null = null;
 
 if (isFirebaseConfigured) {
-    app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-    auth = getAuth(app);
-    db = getFirestore(app);
-    storage = getStorage(app);
+    try {
+        app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+        auth = getAuth(app);
+        
+        db = getFirestore(app);
+        storage = getStorage(app);
+    } catch (e) {
+        console.error("Could not initialize Firebase. Please check your .env file.", e);
+    }
 }
 
 export { auth, db, storage };

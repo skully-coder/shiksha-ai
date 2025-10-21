@@ -191,7 +191,7 @@ export default function SignupPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <ThemeSwitcher />
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 shadow-sm">
         <CardHeader className="text-center">
           <CardTitle className="font-headline text-3xl">Create an Account</CardTitle>
           <CardDescription>Join Shiksha AI to get started.</CardDescription>

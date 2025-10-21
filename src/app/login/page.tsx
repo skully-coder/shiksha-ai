@@ -131,13 +131,13 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           {/* Welcome Section */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-36 h-36 bg-white dark:bg-slate-800/50 dark:backdrop-blur-xl dark:border dark:border-slate-700/50 rounded-full shadow-lg dark:shadow-2xl dark:shadow-green-500/20 mb-6 transform hover:scale-105 transition-transform duration-300">
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-white dark:bg-slate-800/50 dark:backdrop-blur-xl dark:border dark:border-slate-700/50 rounded-full shadow-lg dark:shadow-2xl dark:shadow-green-500/20 mb-6 transform hover:scale-105 transition-transform duration-300 overflow-hidden">
               <Image 
                 src="/assets/Logo_2.png"
                 alt="Shiksha AI Logo"
                 width={96}
                 height={96}
-                className="rounded-full"
+                className="rounded-full object-cover w-full h-full"
                 priority
               />
             </div>
@@ -145,12 +145,12 @@ export default function LoginPage() {
               Welcome Back
             </h1>
             <p className="text-gray-600 dark:text-slate-300 text-lg">
-              Sign in to continue your learning journey
+              Continue your Learning Journey
             </p>
           </div>
 
           {/* Login Card */}
-          <Card className="backdrop-blur-lg bg-white/80 dark:bg-slate-800/40 dark:backdrop-blur-xl border-white/20 dark:border-slate-700/50 shadow-2xl dark:shadow-2xl dark:shadow-purple-500/10">
+          <Card className="backdrop-blur-lg bg-white/60 dark:bg-slate-800/40 dark:backdrop-blur-xl border-white/20 dark:border-slate-700/50 shadow-lg dark:shadow-2xl dark:shadow-purple-500/10">
             <CardContent className="p-8">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

@@ -224,7 +224,7 @@ export default function LoginPage() {
                     {isLoading ? (
                       <>
                         <LoadingSpinner className="mr-2 h-5 w-5" />
-                        Signing In...
+                        Signing In..
                       </>
                     ) : (
                       <>

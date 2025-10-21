@@ -1,4 +1,3 @@
-
 ![GitHub deployments](https://img.shields.io/github/deployments/skully-coder/shiksha-ai/production?style=for-the-badge&label=deployment)
 
 # 🎓 Shiksha AI — AI-Powered Teaching Assistant
@@ -35,8 +34,17 @@ Teachers in developing regions often face challenges such as:
 | **Styling** | ShadCN UI, Tailwind CSS |
 | **Backend** | Firebase |
 | **AI Integration** | Genkit with Google Gemini Models |
+| **Theme Management** | next-themes |
 
 Built for **scalability**, **ease of use**, and **performance**.
+
+---
+
+## 🌙 Theme Switcher
+
+Shiksha AI includes a **dynamic theme switcher** that enhances user experience by providing both light and dark mode options.
+
+**Workflow**: Click theme button → Instant toggle → Auto-saved preference → Applied across all pages
 
 ---
 
@@ -48,6 +56,7 @@ Shiksha AI contributes to a more equitable education ecosystem by:
 - 🧾 Providing personalized lesson plans and materials  
 - 🌐 Bridging the digital divide in low-connectivity regions  
 - 👩‍🏫 Allowing teachers to focus more on student interaction  
+- 🌙 Offering comfortable viewing experience in any lighting condition
 
 ---
 

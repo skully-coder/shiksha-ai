@@ -42,7 +42,7 @@ Built for **scalability**, **ease of use**, and **performance**.
 
 ## 📊 ShikshaAI Architecture
 
-- [HighLevel Diagram](https://app.diagrams.net/?url=https://raw.githubusercontent.com/pipaliyajaydip/shiksha-ai/refs/heads/master/ShikshaAI-Architecture.drawio)
+- [HighLevel Diagram](https://app.diagrams.net/?url=https://raw.githubusercontent.com/skully-coder/shiksha-ai/refs/heads/master/ShikshaAI-Architecture.drawio)
 - [UseCase Diagram](https://app.diagrams.net/?url=https://raw.githubusercontent.com/skully-coder/shiksha-ai/refs/heads/master/ShikshaAI-UseCase.drawio)
 
 ---

@@ -40,6 +40,13 @@ Built for **scalability**, **ease of use**, and **performance**.
 
 ---
 
+## 📊 ShikshaAI Architecture
+
+[🔗 HighLevel Diagram](https://raw.githubusercontent.com/pipaliyajaydip/shiksha-ai/refs/heads/master/ShikshaAI-Architecture.drawio)
+[🔗 UseCase Diagram](https://raw.githubusercontent.com/skully-coder/shiksha-ai/refs/heads/master/ShikshaAI-UseCase.drawio)
+
+---
+
 ## 🌙 Theme Switcher
 
 Shiksha AI includes a **dynamic theme switcher** that enhances user experience by providing both light and dark mode options.

@@ -194,12 +194,21 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                 </a>
             </td>
             <td align="center">
+                <a href="https://github.com/pipaliyajaydip">
+                    <img src="https://avatars.githubusercontent.com/u/67597366?v=4" width="100;" alt="pipaliyajaydip"/>
+                    <br />
+                    <sub><b>Jaydip Pipaliya</b></sub>
+                </a>
+            </td>
+            <td align="center">
                 <a href="https://github.com/Dhanwantisatone">
                     <img src="https://avatars.githubusercontent.com/u/191073548?v=4" width="100;" alt="Dhanwantisatone"/>
                     <br />
                     <sub><b>Dhanwantisatone</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
             <td align="center">
                 <a href="https://github.com/Abinesh2418">
                     <img src="https://avatars.githubusercontent.com/u/183372764?v=4" width="100;" alt="Abinesh2418"/>
@@ -207,8 +216,6 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                     <sub><b>Abinesh B</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/abbasabro">
                     <img src="https://avatars.githubusercontent.com/u/141827555?v=4" width="100;" alt="abbasabro"/>
@@ -235,13 +242,6 @@ Please see our [Contribution Guidelines](/CONTRIBUTING.md) before making a pull 
                     <img src="https://avatars.githubusercontent.com/u/31427850?v=4" width="100;" alt="ImgBotApp"/>
                     <br />
                     <sub><b>Imgbot</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/pipaliyajaydip">
-                    <img src="https://avatars.githubusercontent.com/u/67597366?v=4" width="100;" alt="pipaliyajaydip"/>
-                    <br />
-                    <sub><b>Jaydip Pipaliya</b></sub>
                 </a>
             </td>
             <td align="center">

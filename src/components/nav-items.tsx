@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { BookText, Sheet, ImageIcon, BrainCircuit, Languages, LogOut, User, Users } from "lucide-react";
+import { BookText, Sheet, ImageIcon, BrainCircuit, Languages, LogOut, User, Users, GraduationCap } from "lucide-react";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 const teacherNavItems = [
   { href: "/lesson-planner", icon: BookText, label: "Lesson Planner" },
   { href: "/classrooms", icon: Users, label: "Classrooms" },
+  { href: "/grades", icon: GraduationCap, label: "Grades" },
   { href: "/differentiated-worksheets", icon: Sheet, label: "Worksheets" },
   { href: "/visual-aids", icon: ImageIcon, label: "Visual Aids" },
   { href: "/knowledge-base", icon: BrainCircuit, label: "Knowledge Base" },
@@ -20,6 +21,7 @@ const teacherNavItems = [
 
 const studentNavItems = [
   { href: "/classrooms", icon: Users, label: "Classrooms" },
+  { href: "/grades", icon: GraduationCap, label: "Grades" },
   { href: "/knowledge-base", icon: BrainCircuit, label: "Knowledge Base" },
   { href: "/local-content", icon: Languages, label: "Local Content" },
 ];
@@ -39,14 +41,14 @@ export function NavItems() {
       }
       router.push('/login');
       toast({
-          variant: 'default',
-          title: t("loggedOut"),
-          description: t("successfullyLoggedOut"),
-          style: { backgroundColor: "#fff", color: "#222" }
+        variant: 'default',
+        title: t("loggedOut"),
+        description: t("successfullyLoggedOut"),
+        style: { backgroundColor: "#fff", color: "#222" }
       });
     } catch (error) {
       console.error("Error signing out: ", error);
-       toast({
+      toast({
         variant: 'destructive',
         title: t("logoutFailed"),
         description: t("unexpectedLogoutError"),
@@ -75,7 +77,7 @@ export function NavItems() {
           </SidebarMenuItem>
         ))}
       </SidebarMenu>
-      
+
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton tooltip={t("selectLanguage")}>
@@ -93,19 +95,19 @@ export function NavItems() {
           </SidebarMenuButton>
         </SidebarMenuItem>
 
-         <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip={t("profile")} isActive={pathname === '/profile'}>
-              <Link href="/profile">
-                <User />
-                <span className="truncate">{user?.email ?? t("profile")}</span>
-              </Link>
-            </SidebarMenuButton>
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip={t("profile")} isActive={pathname === '/profile'}>
+            <Link href="/profile">
+              <User />
+              <span className="truncate">{user?.email ?? t("profile")}</span>
+            </Link>
+          </SidebarMenuButton>
         </SidebarMenuItem>
         <SidebarMenuItem>
-            <SidebarMenuButton onClick={handleLogout} tooltip={t("logout")}>
-              <LogOut />
-              <span>{t("logout")}</span>
-            </SidebarMenuButton>
+          <SidebarMenuButton onClick={handleLogout} tooltip={t("logout")}>
+            <LogOut />
+            <span>{t("logout")}</span>
+          </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
     </div>

@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-export function ThemeSwitcher() {
+import { cn } from '@/lib/utils';
+
+export function ThemeSwitcher({ className }: { className?: string }) {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [mounted, setMounted] = useState(false);
 
@@ -47,7 +49,7 @@ export function ThemeSwitcher() {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      className="fixed top-4 right-4 z-50 bg-background/80 backdrop-blur-sm border border-border/50 hover:bg-accent/50 transition-all duration-200"
+      className={cn("fixed top-4 right-4 z-50 bg-background/80 backdrop-blur-sm border border-border/50 hover:bg-accent/50 transition-all duration-200", className)}
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
       title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >

@@ -39,5 +39,13 @@ service cloud.firestore {
     match /worksheets/{worksheetId} {
       allow read, create: if request.auth != null;
     }
+
+    match /grades/{gradeId} {
+      allow read, create: if request.auth != null;
+    }
+
+    match /student_academic_records/{recordId} {
+      allow read, create: if request.auth != null;
+    }
   }
 }

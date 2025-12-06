@@ -11,16 +11,17 @@ import { ThemeSwitcher } from '@/components/theme-switcher';
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <ThemeSwitcher />
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-emerald-600/10 dark:from-green-400/5 dark:to-emerald-400/5" />
         <div className="relative max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16">
           <div className="text-center">
             <div className="flex justify-center mb-6">
-              <Image 
-                src="/assets/Logo_2.png" 
-                alt="Shiksha AI Logo" 
-                width={200} 
+              <Image
+                src="/assets/Logo_2.png"
+                alt="Shiksha AI Logo"
+                width={200}
                 height={200}
                 className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 xl:w-40 xl:h-40"
                 style={{ mixBlendMode: 'multiply' }}
@@ -144,7 +145,7 @@ export default function Home() {
               Bridging the digital divide and empowering educators worldwide with accessible AI technology.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             <div className="text-center px-4 hover:transform hover:scale-105 transition-transform duration-200">
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
@@ -155,7 +156,7 @@ export default function Home() {
                 Making advanced AI tools accessible to educators in low-resource environments, regardless of technical expertise or connectivity.
               </p>
             </div>
-            
+
             <div className="text-center px-4 hover:transform hover:scale-105 transition-transform duration-200">
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
                 <Heart className="w-8 h-8 sm:w-10 sm:h-10" />
@@ -165,7 +166,7 @@ export default function Home() {
                 Empowering teachers to focus on what they do best - inspiring and educating students - by automating routine tasks.
               </p>
             </div>
-            
+
             <div className="text-center px-4 hover:transform hover:scale-105 transition-transform duration-200">
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
                 <Globe className="w-8 h-8 sm:w-10 sm:h-10" />

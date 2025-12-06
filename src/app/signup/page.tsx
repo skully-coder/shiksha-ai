@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc, updateDoc, arrayUnion, collection, query, where, getDocs } from 'firebase/firestore';import { auth, db } from '@/lib/firebase';
+import { doc, setDoc, updateDoc, arrayUnion, collection, query, where, getDocs } from 'firebase/firestore'; import { auth, db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -17,37 +17,39 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/loading-spinner';
 import { ThemeSwitcher } from '@/components/theme-switcher';
+import { useAuth } from '@/hooks/use-auth';
 
 const signupSchema = z.object({
-    role: z.enum(['teacher', 'student']),
-    name: z.string().min(2, 'Name must be at least 2 characters.'),
-    email: z.string().email('Invalid email address.'),
-    password: z.string().min(6, 'Password must be at least 6 characters.'),
-    class: z.coerce.string().optional(),
-    section: z.string().optional(),
-    rollNumber: z.string().optional(),
-  }).superRefine((data, ctx) => {
-    const needsClassSection = data.role === 'student' || data.role === 'teacher';
-    if (needsClassSection) {
-      if (!data.class) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Class is required.', path: ['class'] });
-      }
-      if (!data.section) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Section is required.', path: ['section'] });
-      }
+  role: z.enum(['teacher', 'student']),
+  name: z.string().min(2, 'Name must be at least 2 characters.'),
+  email: z.string().email('Invalid email address.'),
+  password: z.string().min(6, 'Password must be at least 6 characters.'),
+  class: z.coerce.string().optional(),
+  section: z.string().optional(),
+  rollNumber: z.string().optional(),
+}).superRefine((data, ctx) => {
+  const needsClassSection = data.role === 'student' || data.role === 'teacher';
+  if (needsClassSection) {
+    if (!data.class) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Class is required.', path: ['class'] });
     }
-    if (data.role === 'student') {
-      if (!data.rollNumber) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Roll number is required.', path: ['rollNumber'] });
-      }
+    if (!data.section) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Section is required.', path: ['section'] });
     }
-  });
+  }
+  if (data.role === 'student') {
+    if (!data.rollNumber) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Roll number is required.', path: ['rollNumber'] });
+    }
+  }
+});
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { setProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   // Check if services are available
@@ -83,7 +85,7 @@ export default function SignupPage() {
 
   async function onSubmit(values: SignupFormValues) {
     setIsLoading(true);
-    
+
     if (!auth) {
       toast({
         variant: 'destructive',
@@ -93,7 +95,7 @@ export default function SignupPage() {
       setIsLoading(false);
       return;
     }
-    
+
     if (!db) {
       toast({
         variant: 'destructive',
@@ -103,7 +105,7 @@ export default function SignupPage() {
       setIsLoading(false);
       return;
     }
-    
+
     try {
       if (!db) {
         toast({
@@ -127,69 +129,72 @@ export default function SignupPage() {
 
       // Prepare user data for Firestore
       const userData: any = {
-          uid: user.uid,
-          email: values.email,
-          name: values.name,
-          role: values.role,
+        uid: user.uid,
+        email: values.email,
+        name: values.name,
+        role: values.role,
       };
-      
+
       const collectionName = values.role === 'teacher' ? 'teachers' : 'students';
-      
+
       if (values.role === 'student') {
-          const grade = values.class!;
-          const section = values.section!.toUpperCase();
-          const classroomId = `${grade}-${section}`.toUpperCase();
-          userData.class = grade;
-          userData.section = section;
-          userData.rollNumber = values.rollNumber;
-          userData.classroomId = classroomId;
+        const grade = values.class!;
+        const section = values.section!.toUpperCase();
+        const classroomId = `${grade}-${section}`.toUpperCase();
+        userData.class = grade;
+        userData.section = section;
+        userData.rollNumber = values.rollNumber;
+        userData.classroomId = classroomId;
 
-          // Add student to classroom
-          const classroomRef = doc(db, 'classrooms', classroomId);
-          await setDoc(classroomRef, {
-              grade: grade,
-              section: section,
-              studentIds: arrayUnion(user.uid)
-          }, { merge: true });
+        // Add student to classroom
+        const classroomRef = doc(db, 'classrooms', classroomId);
+        await setDoc(classroomRef, {
+          grade: grade,
+          section: section,
+          studentIds: arrayUnion(user.uid)
+        }, { merge: true });
       } else if (values.role === 'teacher') {
-          const teachersRef = collection(db, 'teachers');
-          const existingTeacherQuery = query(
-            teachersRef,
-            where('class', '==', values.class),
-            where('section', '==', values.section?.toUpperCase())
-          );
-          
-          const existingSnapshot = await getDocs(existingTeacherQuery);
-          
-          if (!existingSnapshot.empty) {
-            const existingTeacher = existingSnapshot.docs[0].data();
-            toast({
-              variant: 'destructive',
-              title: 'Class Already Assigned',
-              description: `Already a teacher is assigned to class ${values.class}-${values.section}. Please choose a different class-section.`,
-            });
-            setIsLoading(false);
-            return;
-          }
-          const grade = values.class!;
-          const section = values.section!.toUpperCase();
-          const classroomId = `${grade}-${section}`.toUpperCase();
-          // Persist teacher's classroom membership
-          userData.class = grade;
-          userData.section = section;
-          userData.classroomIds = arrayUnion(classroomId);
+        const teachersRef = collection(db, 'teachers');
+        const existingTeacherQuery = query(
+          teachersRef,
+          where('class', '==', values.class),
+          where('section', '==', values.section?.toUpperCase())
+        );
 
-          // Upsert classroom and add teacher
-          const classroomRef = doc(db, 'classrooms', classroomId);
-          await setDoc(classroomRef, {
-              grade: grade,
-              section: section,
-              teacherIds: arrayUnion(user.uid)
-          }, { merge: true });
+        const existingSnapshot = await getDocs(existingTeacherQuery);
+
+        if (!existingSnapshot.empty) {
+          const existingTeacher = existingSnapshot.docs[0].data();
+          toast({
+            variant: 'destructive',
+            title: 'Class Already Assigned',
+            description: `Already a teacher is assigned to class ${values.class}-${values.section}. Please choose a different class-section.`,
+          });
+          setIsLoading(false);
+          return;
+        }
+        const grade = values.class!;
+        const section = values.section!.toUpperCase();
+        const classroomId = `${grade}-${section}`.toUpperCase();
+        // Persist teacher's classroom membership
+        userData.class = grade;
+        userData.section = section;
+        userData.classroomIds = arrayUnion(classroomId);
+
+        // Upsert classroom and add teacher
+        const classroomRef = doc(db, 'classrooms', classroomId);
+        await setDoc(classroomRef, {
+          grade: grade,
+          section: section,
+          teacherIds: arrayUnion(user.uid)
+        }, { merge: true });
       }
 
       // Save user data to Firestore
       await setDoc(doc(db, collectionName, user.uid), userData, { merge: true });
+
+      // Manually set profile to avoid race condition
+      setProfile(userData);
 
       toast({
         title: 'Account Created',
@@ -198,7 +203,7 @@ export default function SignupPage() {
       router.replace('/lesson-planner');
     } catch (error: any) {
       let description = 'An unexpected error occurred. Please try again.';
-      
+
       if (error.code === 'auth/email-already-in-use') {
         description = 'This email address is already in use.';
       } else if (error.code === 'auth/weak-password') {
@@ -212,7 +217,7 @@ export default function SignupPage() {
       } else if (error.message) {
         description = `Error: ${error.message}`;
       }
-      
+
       toast({
         variant: 'destructive',
         title: 'Sign Up Failed',
@@ -278,7 +283,7 @@ export default function SignupPage() {
                   </FormItem>
                 )}
               />
-              
+
               {(selectedRole === 'student' || selectedRole === 'teacher') && (
                 <>
                   <div className="grid grid-cols-3 gap-4">
@@ -326,7 +331,7 @@ export default function SignupPage() {
                   </div>
                 </>
               )}
-              
+
               <FormField
                 control={form.control}
                 name="email"
@@ -354,7 +359,7 @@ export default function SignupPage() {
                   </FormItem>
                 )}
               />
-              
+
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? <LoadingSpinner className="mr-2" /> : null}
                 Sign Up

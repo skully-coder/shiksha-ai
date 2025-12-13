@@ -1,23 +1,26 @@
-
 'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc, updateDoc, arrayUnion, collection, query, where, getDocs } from 'firebase/firestore'; import { auth, db } from '@/lib/firebase';
+import { doc, setDoc, updateDoc, arrayUnion, collection, query, where, getDocs } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { RevealPasswordInput } from '@/components/ui/reveal-password-input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/loading-spinner';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { useAuth } from '@/hooks/use-auth';
+import { Users, Lightbulb } from 'lucide-react';
 
 const signupSchema = z.object({
   role: z.enum(['teacher', 'student']),
@@ -52,22 +55,6 @@ export default function SignupPage() {
   const { setProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Check if services are available
-  if (!auth || !db) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle className="text-destructive">Service Unavailable</CardTitle>
-            <CardDescription>
-              Registration service is currently unavailable. Please try again later.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    );
-  }
-
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -86,17 +73,7 @@ export default function SignupPage() {
   async function onSubmit(values: SignupFormValues) {
     setIsLoading(true);
 
-    if (!auth) {
-      toast({
-        variant: 'destructive',
-        title: 'Service Unavailable',
-        description: 'Registration service is currently unavailable. Please try again later.',
-      });
-      setIsLoading(false);
-      return;
-    }
-
-    if (!db) {
+    if (!auth || !db) {
       toast({
         variant: 'destructive',
         title: 'Service Unavailable',
@@ -107,23 +84,6 @@ export default function SignupPage() {
     }
 
     try {
-      if (!db) {
-        toast({
-          variant: 'destructive',
-          title: 'Configuration Error',
-          description: 'Database connection not available',
-        });
-        return;
-      }
-      if (!auth) {
-        toast({
-          variant: 'destructive',
-          title: 'Configuration Error',
-          description: 'Authentication service not available',
-        });
-        return;
-      }
-
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
 
@@ -210,10 +170,6 @@ export default function SignupPage() {
         description = 'Password is too weak. Please choose a stronger password.';
       } else if (error.code === 'auth/invalid-email') {
         description = 'Invalid email address format.';
-      } else if (error.code === 'auth/network-request-failed') {
-        description = 'Network error. Please check your internet connection.';
-      } else if (error.code === 'permission-denied') {
-        description = 'Permission denied. Please check Firestore rules.';
       } else if (error.message) {
         description = `Error: ${error.message}`;
       }
@@ -229,16 +185,69 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <ThemeSwitcher />
-      <Card className="w-full max-w-md bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 shadow-sm">
-        <CardHeader className="text-center">
-          <CardTitle className="font-headline text-3xl">Create an Account</CardTitle>
-          <CardDescription>Join Shiksha AI to get started.</CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className="min-h-screen grid lg:grid-cols-2">
+      {/* Left Column - Branding (Hidden on mobile) */}
+      <div className="hidden lg:flex flex-col relative bg-sage dark:bg-green-950 p-10 text-forest dark:text-green-100 overflow-hidden">
+        <div className="absolute inset-0 bg-noise opacity-30 mix-blend-soft-light"></div>
+        {/* Decorative Circles */}
+        <div className="absolute -top-20 -left-20 w-80 h-80 bg-green-300/30 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-emerald-300/30 rounded-full blur-3xl"></div>
+
+        <div className="relative z-10 flex items-center gap-2 mb-auto">
+          <Image
+            src="/assets/Logo_2.png"
+            alt="Shiksha AI"
+            width={40}
+            height={40}
+            className="w-10 h-10 rounded-full"
+          />
+          <span className="text-xl font-bold font-headline tracking-tight">Shiksha AI</span>
+        </div>
+
+        <div className="relative z-10 my-auto max-w-md mx-auto">
+          <Lightbulb className="w-12 h-12 mb-6 opacity-50" />
+          <h2 className="text-3xl font-headline font-semibold mb-6 leading-tight">
+            Join a community of educators transforming classrooms with AI.
+          </h2>
+          <ul className="space-y-4 opacity-80">
+            <li className="flex items-center gap-3">
+              <span className="flex h-2 w-2 rounded-full bg-forest dark:bg-green-200" />
+              Automated Lesson Planning
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex h-2 w-2 rounded-full bg-forest dark:bg-green-200" />
+              Content Generation
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex h-2 w-2 rounded-full bg-forest dark:bg-green-200" />
+              Progress Tracking
+            </li>
+          </ul>
+        </div>
+
+        <div className="relative z-10 mt-auto flex items-center justify-between opacity-70 text-sm">
+          <div className="flex items-center gap-2">
+            <Users className="w-4 h-4" />
+            <span>Join thousands of teachers</span>
+          </div>
+          <span>© 2025 Shiksha AI</span>
+        </div>
+      </div>
+
+      {/* Right Column - Form */}
+      <div className="relative flex flex-col items-center justify-center p-6 sm:p-10 bg-background overflow-y-auto">
+        <div className="absolute top-6 right-6">
+          <ThemeSwitcher />
+        </div>
+
+        <div className="w-full max-w-md space-y-6">
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl font-bold font-headline tracking-tighter sm:text-4xl text-foreground">Create an account</h1>
+            <p className="text-muted-foreground">Enter your information below to create your account</p>
+          </div>
+
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="role"
@@ -251,17 +260,17 @@ export default function SignupPage() {
                         defaultValue={field.value}
                         className="flex space-x-4"
                       >
-                        <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormItem className="flex items-center space-x-2 space-y-0 cursor-pointer">
                           <FormControl>
                             <RadioGroupItem value="teacher" />
                           </FormControl>
-                          <FormLabel className="font-normal">Teacher</FormLabel>
+                          <FormLabel className="font-normal cursor-pointer">Teacher</FormLabel>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormItem className="flex items-center space-x-2 space-y-0 cursor-pointer">
                           <FormControl>
                             <RadioGroupItem value="student" />
                           </FormControl>
-                          <FormLabel className="font-normal">Student</FormLabel>
+                          <FormLabel className="font-normal cursor-pointer">Student</FormLabel>
                         </FormItem>
                       </RadioGroup>
                     </FormControl>
@@ -270,66 +279,66 @@ export default function SignupPage() {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Jane Doe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid gap-2">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="John Doe" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               {(selectedRole === 'student' || selectedRole === 'teacher') && (
-                <>
-                  <div className="grid grid-cols-3 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="class"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Class</FormLabel>
-                          <FormControl>
-                            <Input placeholder="e.g., 10" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="section"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Section</FormLabel>
-                          <FormControl>
-                            <Input placeholder="e.g., A" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    {selectedRole === 'student' && (
-                      <FormField
-                        control={form.control}
-                        name="rollNumber"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Roll No.</FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g., 25" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="class"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Class</FormLabel>
+                        <FormControl>
+                          <Input placeholder="10" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
                     )}
-                  </div>
-                </>
+                  />
+                  <FormField
+                    control={form.control}
+                    name="section"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Section</FormLabel>
+                        <FormControl>
+                          <Input placeholder="A" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {selectedRole === 'student' && (
+                    <FormField
+                      control={form.control}
+                      name="rollNumber"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          <FormLabel>Roll No.</FormLabel>
+                          <FormControl>
+                            <Input placeholder="25" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
               )}
 
               <FormField
@@ -339,7 +348,7 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="e.g., teacher@example.com" {...field} />
+                      <Input type="email" placeholder="name@example.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -353,7 +362,7 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="********" {...field} />
+                      <RevealPasswordInput placeholder="••••••••" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -361,19 +370,31 @@ export default function SignupPage() {
               />
 
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? <LoadingSpinner className="mr-2" /> : null}
-                Sign Up
+                {isLoading ? <LoadingSpinner className="mr-2 h-4 w-4" /> : null}
+                Create Account
               </Button>
             </form>
           </Form>
-          <div className="mt-4 text-center text-sm">
-            Already have an account?{" "}
-            <Link href="/login" className="underline text-primary">
-              Sign In
-            </Link>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">Or</span>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <Link href="/login" className="underline underline-offset-4 hover:text-primary">
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

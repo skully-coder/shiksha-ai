@@ -1,5 +1,5 @@
 
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from '@/hooks/use-auth';
@@ -22,14 +22,14 @@ export default function RootLayout({
         <link rel="icon" href="/assets/favicon.ico" sizes="any" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fraunces:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-          <AuthProvider>
-            <LanguageProvider>
+        <AuthProvider>
+          <LanguageProvider>
             {children}
-            </LanguageProvider>
-          </AuthProvider>
+          </LanguageProvider>
+        </AuthProvider>
         <Toaster />
       </body>
     </html>

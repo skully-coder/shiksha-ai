@@ -1,4 +1,4 @@
-import type {Config} from 'tailwindcss';
+import type { Config } from 'tailwindcss';
 
 export default {
   darkMode: ['class'],
@@ -11,7 +11,7 @@ export default {
     extend: {
       fontFamily: {
         body: ['Poppins', 'sans-serif'],
-        headline: ['Poppins', 'sans-serif'],
+        headline: ['Fraunces', 'serif'],
         code: ['monospace'],
       },
       colors: {
@@ -45,6 +45,14 @@ export default {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
         },
+        forest: {
+          DEFAULT: 'hsl(var(--forest))',
+          foreground: 'hsl(var(--forest-foreground))',
+        },
+        sage: {
+          DEFAULT: 'hsl(var(--sage))',
+          foreground: 'hsl(var(--sage-foreground))',
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
@@ -65,6 +73,9 @@ export default {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+      },
+      backgroundImage: {
+        'noise': "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E\")",
       },
       borderRadius: {
         lg: 'var(--radius)',

@@ -106,7 +106,7 @@ export function NavItems() {
         <SidebarMenuItem>
           <SidebarMenuButton onClick={handleLogout} tooltip={t("logout")}>
             <LogOut />
-            <span>{t("logout")}</span>
+            <span>{t("Log Out")}</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>

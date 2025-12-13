@@ -2,14 +2,20 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+const cardVariants = {
+  default: "bg-card text-card-foreground shadow-sm",
+  glass: "bg-white/40 dark:bg-black/40 backdrop-blur-md border border-white/20 shadow-lg",
+}
+
 const Card = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+  React.HTMLAttributes<HTMLDivElement> & { variant?: keyof typeof cardVariants }
+>(({ className, variant = "default", ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      "rounded-lg border text-card-foreground shadow-sm",
+      variant === "glass" ? "bg-white/40 dark:bg-black/40 backdrop-blur-md border-white/20 shadow-lg" : "bg-card",
       className
     )}
     {...props}

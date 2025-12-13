@@ -57,7 +57,7 @@
     "i18next": "^25.6.0",
     "jspdf": "^3.0.2",
     "lucide-react": "^0.475.0",
-    "next": "16.0.7",
+    "next": "^16.0.10",
     "next-i18next": "^15.4.2",
     "patch-package": "^8.0.0",
     "react": "^19.2.1",
